@@ -104,7 +104,7 @@ export default function QuizPage() {
   }, [responses, currentQuestion]);
 
   return (
-    // <ProtectedRoute>
+    <ProtectedRoute>
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white">
         {/* Header */}
         <div className="bg-black/20 backdrop-blur-sm border-b border-white/10">
@@ -436,6 +436,6 @@ export default function QuizPage() {
           )}
         </main>
       </div>
-    // </ProtectedRoute>
+    </ProtectedRoute>
   );
 } 
