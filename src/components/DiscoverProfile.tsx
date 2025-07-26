@@ -29,13 +29,13 @@ const DiscoverProfile = () => {
           {/* Footer Logo */}
           <div className="flex justify-center mb-4 sm:mb-6">
             <Image
-              src="/healingQuest/whatIsHealingQuestSectionLogo.png"
+              src="/healingQuest/hero section Logo.png"
               alt="HOLO Footer Logo"
-              width={300}
-              height={300}
-              className=""
+              width={489}
+              height={503}
+              className="w-[15rem] md:w-[20rem]"
               loading="lazy"
-              sizes="(max-width: 640px) 80px, (max-width: 768px) 100px, 120px"
+              sizes=""
             />
           </div>
 

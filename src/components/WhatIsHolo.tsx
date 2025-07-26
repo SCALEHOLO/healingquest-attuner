@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const WhatIsHolo = () => {
   return (
-    <section className="px-4 sm:px-6 lg:px-8 bg-[#2a3485] pt-[6rem] ">
+    <section className="px-4 sm:px-6 lg:px-8 bg-[#2a3485] pt-[6rem] lg:pt-[4rem] ">
       <div className="max-w-7xl mx-auto">
 
         {/* Get Started Button - At very top of section */}
@@ -23,7 +23,7 @@ const WhatIsHolo = () => {
           {/* <a className="inline-block rounded-full px-10 py-4 text-lg text-white [text-shadow:1px_1px_2px_rgba(0,0,0,0.4)] bg-gradient-to-r from-[#b57e03] via-yellow-400 to-[#b57e03] shadow-lg hover:shadow-xl transition-all transform hover:scale-105 hover:brightness-110  text-[25px] font-bold w-max" href="/login">Get Started</a> */}
         </div>
 
-        <div className='bg-[#2c2b72] px-[20px] py-[57px]  md:px-[50px] md:py-[20px] md:pt-[70px]  rounded-[25px]'>
+        <div className='bg-[#2c2b72] px-[20px] py-[57px]  md:px-[50px] md:py-[20px] md:pt-[6rem] lg:pt-[4rem]  rounded-[25px]'>
           {/* Title */}
           <div className="text-center mb-8 sm:mb-12 lg:mb-5 lg:mt-5">
             <div className="inline-flex items-center justify-center px-2">
@@ -33,11 +33,11 @@ const WhatIsHolo = () => {
                   What is
                 </h2>
                 <Image
-                  src="/healingQuest/whatIsHealingQuestSectionLogo.png"
+                  src="/healingQuest/whatISholoLogo.png"
                   alt="HOLO ATTUNER"
                   width={300}
                   height={300}
-                  className="mt-[-5rem] max-md:ml-[1rem] md:mt-[-9rem] "
+                  className="mt-[-8rem] max-md:ml-[1rem] md:mt-[-11rem] "
                   loading="lazy"
                   sizes="(max-width: 640px) 120px, (max-width: 768px) 240px, 300px"
                 />

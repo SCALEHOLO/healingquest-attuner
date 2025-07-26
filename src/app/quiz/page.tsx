@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { quizQuestions, scaleLabels } from '@/data/quizQuestions';
 import { saveQuizResults } from '@/services/quizService';
-// import ProtectedRoute from '@/components/ProtectedRoute';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import Button from '@/components/Button';
 import Image from 'next/image';
 

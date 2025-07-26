@@ -50,17 +50,15 @@ const Hero = () => {
         </div>
 
         {/* Center SVG */}
-        <div className=" w-fit absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
-            <Image
-              src="/healingQuest/hero section Logo.png"
-              alt="Center Logo"
-              width={600}
-              height={600}
-              className="min-w-[400px] h-auto "
-              loading="eager"
-              sizes=""
-            />
-        </div>
+        <Image
+          src="/healingQuest/hero section Logo.png"
+          alt="Center Logo"
+          width={416}
+          height={449}
+          className=" sm:min-w-[27rem]  h-auto md:min-w-[27rem] lg:min-w-[29.5rem] absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]  "
+          loading="eager"
+          sizes=""
+        />
 
         {/* Spacer to push heading to bottom */}
         <div className="flex-1"></div>
@@ -69,7 +67,7 @@ const Hero = () => {
         <div className="w-full flex flex-col items-center pb-1 sm:pb-2 mb-16 sm:mb-0">
           {/* Main Heading - At the very bottom */}
           <h1
-            className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-center px-4 tracking-tighter"
+            className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-center px-4 tracking-tighter  "
             style={{
               textShadow: '4px 4px 8px rgba(0,0,0,0.7)'
             }}
