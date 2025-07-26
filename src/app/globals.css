@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Mobile optimizations */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    /* Enable smooth scrolling with hardware acceleration */
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+  
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Optimize for mobile scrolling performance */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
+    /* Prevent horizontal scrolling issues */
+    overflow-x: hidden;
+    /* Enable hardware acceleration for better performance */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+  
+  /* Ensure touch targets are at least 44px */
+  button, 
+  [role="button"],
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Improve touch scrolling for all elements */
+  * {
+    -webkit-overflow-scrolling: touch;
+    /* Prevent layout shifts during scrolling */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  /* Optimize images and media for mobile */
+  img, video, svg {
+    /* Enable hardware acceleration for images */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    /* Improve image rendering */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+@layer utilities {
+  /* Touch-friendly interactions */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+  
+  /* Custom scrollbar for webkit browsers */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+  
+  /* Safe area padding for mobile devices */
+  .safe-area-padding {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  /* Prevent zoom on input focus (iOS) */
+  @media screen and (max-width: 768px) {
+    input, textarea, select {
+      font-size: 16px !important;
+    }
+  }
+}
+
+/* Smooth transitions for mobile - Only apply to specific elements */
+@media (prefers-reduced-motion: no-preference) {
+  button,
+  a,
+  .transition-smooth,
+  input,
+  textarea,
+  select {
+    transition-duration: 0.2s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-float-delayed,
+  .animate-float-slow,
+  .animate-spin-slow,
+  .animate-spin-reverse,
+  .animate-pulse-glow {
+    animation: none;
+  }
+  
+  .animate-fade-in,
+  .animate-fade-in-delayed,
+  .animate-slide-up,
+  .animate-slide-up-delayed {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .bg-gradient-to-r {
+    background: #000 !important;
+    color: #fff !important;
+  }
+}
+
+/* Performance optimizations */
+.animate-float,
+.animate-float-delayed,
+.animate-float-slow,
+.animate-spin-slow,
+.animate-spin-reverse {
+  will-change: transform;
+}
+
+.animate-fade-in,
+.animate-fade-in-delayed,
+.animate-slide-up,
+.animate-slide-up-delayed {
+  will-change: opacity, transform;
+}
+
+/* Backdrop blur enhancements */
+.backdrop-blur-xl {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  /* Reduce backdrop blur on mobile for better performance */
+  .backdrop-blur-xl {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  
+  /* Disable heavy effects on mobile if needed */
+  .mobile-performance-mode .backdrop-blur-xl {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  /* Optimize large images on mobile */
+  .mobile-performance-mode img[src*=".svg"] {
+    will-change: auto;
+    transform: none;
+    -webkit-transform: none;
+  }
+  
+  /* Reduce animation complexity on mobile */
+  .mobile-performance-mode .animate-float,
+  .mobile-performance-mode .animate-float-delayed,
+  .mobile-performance-mode .animate-float-slow {
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+  }
+}
+
+/* Utility classes for performance optimization */
+.gpu-accelerated {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+}
+
+.no-gpu-acceleration {
+  transform: none;
+  -webkit-transform: none;
+  will-change: auto;
+}
+
+/* Smooth scrolling container */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+}
