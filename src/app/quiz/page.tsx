@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { quizQuestions, scaleLabels } from '@/data/quizQuestions';
-import { saveQuizResults, saveIndividualResponse } from '@/services/quizService';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { saveQuizResults } from '@/services/quizService';
+// import ProtectedRoute from '@/components/ProtectedRoute';
 import Button from '@/components/Button';
 import Image from 'next/image';
 
@@ -17,7 +17,7 @@ export default function QuizPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {

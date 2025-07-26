@@ -1,8 +1,8 @@
 'use client';
 
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+// import { useAuth } from '@/contexts/AuthContext';
+// import { useRouter } from 'next/navigation';
+// import { useEffect } from 'react';
 import Hero from '@/components/Hero';
 import WhatIsHolo from '@/components/WhatIsHolo';
 import FourDimensions from '@/components/FourDimensions';
@@ -10,7 +10,7 @@ import DiscoverProfile from '@/components/DiscoverProfile';
 
 export default function Home() {
   // const { user, loading } = useAuth();
-  const router = useRouter();
+  // const router = useRouter();
 
   // useEffect(() => {
   //   if (!loading && user) {
