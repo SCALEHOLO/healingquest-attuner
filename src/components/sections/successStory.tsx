@@ -63,7 +63,7 @@ const SuccessStory = () => {
                                 sizes=""
                             />
                             <p>
-                                <strong className='text-[#ffde59]'> Healing Quest</strong> television, radio and podcasts deliver ancient wisdom for Mind, Body and Soul along with the latest developments in natural health, including Energy Medicine, Quantum Healing, Organic Nutrition, Herbal Insights and Emotional Fitness.
+                                <strong className='text-[#ffde59]'> Healing Quest</strong> Television, Radio and Podcasts deliver ancient wisdom & cutting edge technology for Mind, Body and Soul. Including Plant Medicine,Energy Medicine, Herbal Insights,Quantum Healing and Emotional Fitness. Contact Judy Brooks 707 338-8501 for more info.
                             </p>
                         </div>
                         <div className='md:w-1/2'>
@@ -113,25 +113,27 @@ const SuccessStory = () => {
                                 </div>
 
                             </div>
-                            <div className="  w-full h-full md:bg-[url('/healingQuest/ladies.jpeg')] bg-contain bg-no-repeat bg-center md:absolute  md:right-0 md:h-[91%] lg:h-full " >
-                                <Image
-                                    src="/healingQuest/ladies.jpeg"
-                                    alt="Center Logo"
-                                    width={450}
-                                    height={338}
-                                    className="md:hidden w-full"
-                                    loading="eager"
-                                    sizes=""
-                                />
-                                <Image
-                                    src="/healingQuest/signal-2025-07-26-112011.jpeg"
-                                    alt="Center Logo"
-                                    width={444}
-                                    height={224}
-                                    className="absolute z-[10] right-0 bottom-[30px] md:bottom-[173px] h-[3.5rem]  w-[7rem] md:h-[4.5rem]   lg:h-[5.5rem]  lg:w-[11rem] mr-[-2rem] "
-                                    loading="eager"
-                                    sizes=""
-                                />
+                            <div className="  w-full h-full bg-contain bg-no-repeat bg-center md:absolute  md:right-0 md:h-[91%] lg:h-full " >
+                                <div className="relative overflow-visible">
+                                    <Image
+                                        src="/healingQuest/JUDY__MICHELLE.webp"
+                                        alt="Center Logo"
+                                        width={580}
+                                        height={384.25}
+                                        className="w-full md:translate-y-[-5px] md:h-[404.25px] md:w-[900px]"
+                                        loading="eager"
+                                        sizes="(min-width: 768px) 900px, 100vw"
+                                    />
+                                    <Image
+                                        src="/healingQuest/signal-2025-07-26-112011.jpeg"
+                                        alt="Center Logo"
+                                        width={444}
+                                        height={224}
+                                        className="absolute z-[10] right-[-10px] md:right-[0px] bottom-[0px] md:bottom-[5px] h-[3.5rem]  w-[7rem] md:h-[4.5rem]   lg:h-[7rem]  lg:w-[14rem] md:mr-[-0rem] "
+                                        loading="eager"
+                                        sizes=""
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
