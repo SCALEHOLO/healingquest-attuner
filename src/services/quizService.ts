@@ -1,6 +1,7 @@
 import { doc, setDoc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { UserQuizData, QuizResponse, quizQuestions } from '@/data/quizQuestions';
+import { quizQuestions } from '@/data/quizQuestions';
+import { UserQuizData, QuizResponse } from '@/types/quiz';
 
 export interface QuizSubmission {
   responses: { [questionId: string]: number };
@@ -28,7 +29,7 @@ export const calculateScores = (responses: { [questionId: string]: number }) => 
   Object.entries(responses).forEach(([questionId, value]) => {
     const question = quizQuestions.find(q => q.id === questionId);
     if (question) {
-      const category = question.category as keyof typeof categoryScores;
+      const category = question.dimension as keyof typeof categoryScores;
       categoryScores[category] += value;
       categoryCounts[category]++;
     }
@@ -48,21 +49,21 @@ export const calculateScores = (responses: { [questionId: string]: number }) => 
 export const saveIndividualResponse = async (userId: string, email: string, questionId: string, value: number): Promise<void> => {
   try {
     console.log('💾 Saving individual response:', { userId, questionId, value });
-    
+
     // Save individual response to a sub-collection
     await addDoc(collection(db, 'quizResults', userId, 'responses'), {
       questionId,
       value,
       timestamp: serverTimestamp()
     });
-    
+
     // Also update the user's basic info
     await setDoc(doc(db, 'quizResults', userId), {
       userId,
       email,
       lastUpdated: serverTimestamp()
     }, { merge: true });
-    
+
     console.log('✅ Individual response saved successfully');
   } catch (error) {
     console.error('❌ Error saving individual response:', error);
@@ -73,16 +74,16 @@ export const saveIndividualResponse = async (userId: string, email: string, ques
 export const saveQuizResults = async (submission: QuizSubmission): Promise<void> => {
   try {
     const { responses, email, userId, userExperience } = submission;
-    
+
     console.log('🔥 QUIZ SERVICE: Starting to save quiz results...');
     console.log('📧 Email:', email);
     console.log('🆔 User ID:', userId);
     console.log('📝 Raw responses:', responses);
-    
+
     // Calculate scores
     const scores = calculateScores(responses);
     console.log('📊 Calculated scores:', scores);
-    
+
     // Convert responses to QuizResponse format
     const quizResponses: QuizResponse[] = Object.entries(responses).map(([questionId, value]) => ({
       questionId,
@@ -104,7 +105,7 @@ export const saveQuizResults = async (submission: QuizSubmission): Promise<void>
     // Save to Firestore under user's UID
     const docRef = doc(db, 'quizResults', userId);
     console.log('📄 Saving to document path: quizResults/' + userId);
-    
+
     await setDoc(docRef, {
       ...userQuizData,
       completedAt: serverTimestamp(),
@@ -122,7 +123,7 @@ export const saveQuizResults = async (submission: QuizSubmission): Promise<void>
       source: 'quiz'
     };
     console.log('📈 Saving lead data:', leadData);
-    
+
     await addDoc(collection(db, 'leads'), leadData);
     console.log('✅ Successfully saved to leads collection');
 
@@ -137,7 +138,7 @@ export const getUserQuizResults = async (userId: string): Promise<UserQuizData |
   try {
     const docRef = doc(db, 'quizResults', userId);
     const docSnap = await getDoc(docRef);
-    
+
     if (docSnap.exists()) {
       return docSnap.data() as UserQuizData;
     } else {
@@ -150,7 +151,7 @@ export const getUserQuizResults = async (userId: string): Promise<UserQuizData |
 };
 
 export const getPersonalizedInsight = (scores: UserQuizData['scores']): string => {
-  const dominantCategory = Object.entries(scores).reduce((a, b) => 
+  const dominantCategory = Object.entries(scores).reduce((a, b) =>
     scores[a[0] as keyof typeof scores] > scores[b[0] as keyof typeof scores] ? a : b
   )[0];
 
@@ -162,4 +163,4 @@ export const getPersonalizedInsight = (scores: UserQuizData['scores']): string =
   };
 
   return insights[dominantCategory as keyof typeof insights] || insights.holistic;
-}; 
+};

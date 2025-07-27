@@ -1,11 +1,11 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { 
-  User, 
-  onAuthStateChanged, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
+import {
+  User,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut,
   GoogleAuthProvider,
   signInWithPopup
@@ -36,10 +36,28 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
   const [loading, setLoading] = useState(true);
 
+  // DEV ONLY: Bypass auth on localhost for debugging
   useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+      const mockUser = {
+        uid: "dev-user",
+        email: "dev@localhost",
+        displayName: "Dev User"
+      } as User;
+      setUser(mockUser);
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Only run Firebase auth logic if not on localhost (dev bypass)
+    if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+      return;
+    }
+
     // Handle redirect result for mobile browsers
     const handleRedirectResult = async () => {
       try {
@@ -74,12 +92,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    
+
     // Add mobile-friendly settings
     provider.setCustomParameters({
       prompt: 'select_account'
     });
-    
+
     try {
       await signInWithPopup(auth, provider);
     } catch (error: unknown) {
@@ -100,7 +118,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const value = {
-    user,
+    user: user ?? null,
     loading,
     signIn,
     signUp,
@@ -113,4 +131,4 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       {children}
     </AuthContext.Provider>
   );
-}; 
+};

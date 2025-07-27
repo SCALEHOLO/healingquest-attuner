@@ -1,0 +1,39 @@
+{
+    "task": "Upgrade HarmonyEngine output support across the Results pipeline",
+    "objectives": [
+        {
+            "id": "results_page.sync",
+            "description": "Update ResultsPage.tsx (or equivalent) to consume the new HarmonyEngine output which includes dominant, weakest, overall_average, insight, and theme based on all 12 dimensions."
+        },
+        {
+            "id": "radar_chart.verify",
+            "description": "Verify HoloboidRadarChart.tsx is receiving and correctly rendering all 12 dimension values. Ensure label order and color schemes remain intuitive and evenly spaced."
+        },
+        {
+            "id": "theming.apply",
+            "description": "Use the 'theme' key (from HarmonyEngine output) to dynamically apply styling (e.g., color themes, background overlays) for the Results page. Fallback to default if dimension not found."
+        },
+        {
+            "id": "email_summary.update",
+            "description": "Ensure the EmailJS payload includes the updated insight text, dominant and weakest dimensions, radar chart image (via exportRef), and new theming if applicable."
+        },
+        {
+            "id": "test.run",
+            "description": "Run a full quiz-response cycle using all 12 dimensions and confirm the HarmonyEngine output flows cleanly through all modules (Firestore → HarmonyEngine → Results → Radar → Email summary)."
+        }
+    ],
+    "files": [
+        "ResultsPage.tsx",
+        "HoloboidRadarChart.tsx",
+        "HarmonyEngine.ts",
+        "emailSummary.ts (or email utils)",
+        "quizResultsContext.ts (or wherever output is handled)"
+    ],
+    "success_criteria": [
+        "All 12 dimensions are interpreted and rendered correctly",
+        "Themed styling is visible and changes with top dimension",
+        "Radar chart is visually balanced with 12 axes",
+        "Insight messaging updates with each quiz result",
+        "Email summary reflects accurate, styled results"
+    ]
+}

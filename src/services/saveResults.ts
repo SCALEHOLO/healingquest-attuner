@@ -2,8 +2,8 @@ import { db } from "@/lib/firebase"
 import { doc, setDoc, addDoc, collection, serverTimestamp } from "firebase/firestore"
 
 type InsightData = {
-    dominantCategory: string
-    weakestCategory: string
+    dominant: string
+    weakest: string
     insight: string
     theme: string
 }
@@ -31,8 +31,8 @@ export async function saveResults({
             email,
             responses,
             scores,
-            dominantCategory: insightData.dominantCategory,
-            weakestCategory: insightData.weakestCategory,
+            dominant: insightData.dominant,
+            weakest: insightData.weakest,
             insight: insightData.insight,
             theme: insightData.theme
         }
@@ -49,7 +49,7 @@ export async function saveResults({
             const leadData = {
                 email,
                 scores,
-                dominantCategory: insightData.dominantCategory,
+                dominant: insightData.dominant,
                 timestamp: serverTimestamp(),
                 source: "quiz"
             }

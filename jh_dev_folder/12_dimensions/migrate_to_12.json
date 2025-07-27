@@ -1,0 +1,74 @@
+{
+    "task": "Migrate quizQuestions.ts to support all 12 attunement dimensions",
+    "description": "Replace the existing 8-question set with a new questionnaire representing all 12 HOLO Healing dimensions. Each question must include its dimension, text, response type, options (if applicable), and optional notes support.",
+    "requirements": [
+        {
+            "title": "Target File",
+            "details": [
+                "src/data/quizQuestions.ts"
+            ]
+        },
+        {
+            "title": "For each of the 12 dimensions, add 1–2 questions",
+            "details": [
+                "Dimensions: Mental, Emotional, Physical, Spiritual, Financial, Relational, Environmental, Professional, Holistic, Integration, Consciousness, Resonance"
+            ]
+        },
+        {
+            "title": "Multiple-choice Questions",
+            "details": [
+                "`type`: 'multiple-choice'",
+                "`options`: list of { label: 'A', text: '...', score: 1–4 }",
+                "`notesEnabled`: true or false"
+            ]
+        },
+        {
+            "title": "Longform Questions (optional)",
+            "details": [
+                "`type`: 'longform'",
+                "Use `notesEnabled: false` (as notes are inherent)"
+            ]
+        },
+        {
+            "title": "Schema Example",
+            "details": [
+                {
+                    "dimension": "Spiritual",
+                    "question": "In what ways do you feel connected to something greater than yourself?",
+                    "type": "multiple-choice",
+                    "options": [
+                        {
+                            "label": "A",
+                            "text": "Daily meditation/prayer",
+                            "score": 4
+                        },
+                        {
+                            "label": "B",
+                            "text": "Occasional reflection",
+                            "score": 3
+                        },
+                        {
+                            "label": "C",
+                            "text": "Rarely think about it",
+                            "score": 2
+                        },
+                        {
+                            "label": "D",
+                            "text": "Not part of my experience",
+                            "score": 1
+                        }
+                    ],
+                    "notesEnabled": true
+                }
+            ]
+        },
+        {
+            "title": "Validation",
+            "details": [
+                "Ensure every question has a dimension, type, options (if needed), and scores mapped cleanly",
+                "Use proper TypeScript export format"
+            ]
+        }
+    ],
+    "output": "A fully updated `quizQuestions.ts` file with 12 dimensions covered and question objects validated"
+}

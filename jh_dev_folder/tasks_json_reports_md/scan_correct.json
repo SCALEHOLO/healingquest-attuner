@@ -1,0 +1,33 @@
+{
+    "task": "Normalize attunement scoring system to support mixed scale types (1–5 for MC, 1–10 for numeric)",
+    "objectives": [
+        {
+            "id": "engine.normalize",
+            "description": "Refactor `generateHarmonyInsights()` in HarmonyEngine.ts to normalize all scores to a 1–10 scale using each question's `max_score` field before calculating totals and overall_average. Add a `normalizeScore(score, max)` utility inside the function if not already present."
+        },
+        {
+            "id": "schema.max_score",
+            "description": "Update all questions in quizQuestions.ts to include a new field: `max_score`. Set this to 5 for all multiple-choice questions and 10 for numeric ones."
+        },
+        {
+            "id": "radar.scale",
+            "description": "Ensure HoloboidRadarChart.tsx uses `suggestedMax: 10` in its chart config, regardless of original scale, so that scores are visually normalized and comparable."
+        },
+        {
+            "id": "results.verify",
+            "description": "Confirm ResultsPage.tsx and any dependent modules are reading the already-normalized scores (i.e., no additional adjustment required on display or email)."
+        }
+    ],
+    "files": [
+        "src/lib/HarmonyEngine.ts",
+        "src/data/quizQuestions.ts",
+        "src/components/HoloboidRadarChart.tsx",
+        "src/app/results/page.tsx"
+    ],
+    "success_criteria": [
+        "All scores (MC + numeric) are consistently normalized to 1–10 before aggregation",
+        "Radar chart scales are visually fair and intuitive",
+        "No modules are double-scaling or misinterpreting the score ranges",
+        "All build and type checks pass successfully"
+    ]
+}

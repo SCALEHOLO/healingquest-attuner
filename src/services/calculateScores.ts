@@ -1,98 +1,73 @@
 import { quizQuestions } from "@/data/quizQuestions";
 
 /**
- * Calculates normalized scores for 8 attunement categories.
+ * Calculates normalized scores for 12 attunement dimensions.
  * @param responses - Object mapping questionId to numeric response
- * @returns Object with scores for each category (0-10 scale)
+ * @returns Object with scores for each dimension (0-10 scale)
  */
-export function calculateScores(responses: { [questionId: string]: number }): {
-    mental: number;
-    emotional: number;
-    physical: number;
-    spiritual: number;
-    environmental: number;
-    social: number;
-    financial: number;
-    creative: number;
-} {
-    // Define all 8 categories
-    const categories = [
-        "mental",
-        "emotional",
-        "physical",
-        "spiritual",
-        "environmental",
-        "social",
-        "financial",
-        "creative"
+export function calculateScores(responses: { [questionId: string]: number }): Record<string, number> {
+    // Define all 12 dimensions
+    const dimensions = [
+        "Mental",
+        "Emotional",
+        "Physical",
+        "Spiritual",
+        "Financial",
+        "Relational",
+        "Environmental",
+        "Professional",
+        "Holistic",
+        "Integration",
+        "Consciousness",
+        "Resonance"
     ] as const;
 
     // Initialize accumulators and counts
-    const rawScores: Record<typeof categories[number], number> = {
-        mental: 0,
-        emotional: 0,
-        physical: 0,
-        spiritual: 0,
-        environmental: 0,
-        social: 0,
-        financial: 0,
-        creative: 0
-    };
-    const counts: Record<typeof categories[number], number> = {
-        mental: 0,
-        emotional: 0,
-        physical: 0,
-        spiritual: 0,
-        environmental: 0,
-        social: 0,
-        financial: 0,
-        creative: 0
-    };
+    const rawScores: Record<string, number> = {};
+    const counts: Record<string, number> = {};
+    for (const dim of dimensions) {
+        rawScores[dim] = 0;
+        counts[dim] = 0;
+    }
 
-    // Build a map of questionId -> category (if present)
-    const questionCategoryMap: Record<string, string> = {};
+    // Build a map of questionId -> dimension and questionId -> max_score
+    const questionDimensionMap: Record<string, string> = {};
+    const questionMaxScoreMap: Record<string, number> = {};
     for (const q of quizQuestions) {
-        questionCategoryMap[q.id] = q.category;
+        questionDimensionMap[q.id] = q.dimension;
+        questionMaxScoreMap[q.id] = q.max_score;
     }
 
-    // Map quiz data categories to the 8 attunement categories (customize as needed)
-    const categoryMapping: Record<string, typeof categories[number]> = {
-        holistic: "mental",
-        integration: "emotional",
-        consciousness: "spiritual",
-        resonance: "creative"
-        // Add more mappings if quizQuestions.ts is updated
-    };
-
-    // Process responses
+    // Process responses (normalize each to 0-10 using max_score)
     for (const [questionId, value] of Object.entries(responses)) {
-        const quizCategory = questionCategoryMap[questionId];
-        if (!quizCategory) {
-            console.warn(`[calculateScores] Warning: Question ID "${questionId}" not found in quizQuestions. Skipping.`);
+        const dimension = questionDimensionMap[questionId];
+        const maxScore = questionMaxScoreMap[questionId];
+        if (!dimension || !maxScore) {
+            console.warn(`[calculateScores] Warning: Question ID "${questionId}" not found in quizQuestions or missing max_score. Skipping.`);
             continue;
         }
-        const attunementCategory = categoryMapping[quizCategory];
-        if (!attunementCategory) {
-            console.warn(`[calculateScores] Warning: Quiz category "${quizCategory}" for question "${questionId}" does not map to an attunement category. Skipping.`);
+        if (!(dimension in rawScores)) {
+            console.warn(`[calculateScores] Warning: Dimension "${dimension}" for question "${questionId}" is not a recognized dimension. Skipping.`);
             continue;
         }
-        rawScores[attunementCategory] += value;
-        counts[attunementCategory] += 1;
+        // Normalize to 0-10 scale (assume min is 1)
+        const normalized = ((value - 1) / (maxScore - 1)) * 10;
+        rawScores[dimension] += normalized;
+        counts[dimension] += 1;
     }
 
-    // Calculate normalized scores (average, then scale to 0-10)
-    const normalizedScores: Record<typeof categories[number], number> = { ...rawScores };
-    for (const category of categories) {
-        if (counts[category] > 0) {
-            // Responses are on a 1-5 scale; normalize to 0-10
-            const avg = rawScores[category] / counts[category];
-            normalizedScores[category] = ((avg - 1) / 4) * 10;
+    // Calculate normalized scores (average of normalized values, already 0-10)
+    const normalizedScores: Record<string, number> = { ...rawScores };
+    for (const dim of dimensions) {
+        if (counts[dim] > 0) {
+            const avg = rawScores[dim] / counts[dim];
+            normalizedScores[dim] = avg;
         } else {
-            normalizedScores[category] = 0;
+            normalizedScores[dim] = 0;
         }
         // Logging for development/debugging
         console.log(
-            `[calculateScores] Category: ${category} | Raw Total: ${rawScores[category]} | Count: ${counts[category]} | Normalized (0-10): ${normalizedScores[category].toFixed(2)}`
+            `[calculateScores] Dimension: ${dim} | Normalized Total: ${rawScores[dim]} | Count: ${counts[dim]} | Normalized Avg (0-10): ${normalizedScores[dim].toFixed(2)}`
         );
     }
 

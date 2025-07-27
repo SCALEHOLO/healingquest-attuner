@@ -1,0 +1,32 @@
+{
+    "task": "Audit and adjust scoring logic to account for updated multiple-choice questions with 1–5 scoring range",
+    "objectives": [
+        {
+            "id": "engine.normalize",
+            "description": "Update HarmonyEngine.ts to normalize all scores to a 1–10 scale before computing totals and averages."
+        },
+        {
+            "id": "radar.scale",
+            "description": "Ensure HoloboidRadarChart.tsx reflects a suggestedMax of 10 for numeric, or 5 if exclusively rendering MC questions."
+        },
+        {
+            "id": "results.visuals",
+            "description": "Verify that dimension scores are visually comparable regardless of source question type (numeric vs multiple-choice)."
+        },
+        {
+            "id": "question.schema",
+            "description": "Ensure each question includes a `max_score` field so the system knows how to normalize its response."
+        }
+    ],
+    "files": [
+        "HarmonyEngine.ts",
+        "HoloboidRadarChart.tsx",
+        "quizQuestions.ts",
+        "ResultsPage.tsx"
+    ],
+    "success_criteria": [
+        "All scores are normalized to a consistent 1–10 range",
+        "Radar chart does not overemphasize numeric questions",
+        "Visual and statistical results remain balanced"
+    ]
+}

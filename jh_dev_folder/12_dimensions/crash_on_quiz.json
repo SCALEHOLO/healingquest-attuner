@@ -1,0 +1,17 @@
+{
+    "task": "Investigate post-quiz crash on results page",
+    "description": "The app crashes with an error boundary message after submitting the quiz and attempting to view the results. Investigate the cause by tracing through the results page, score calculation, and rendering components.",
+    "checklist": [
+        "Start the local dev server and complete a quiz run manually",
+        "Check the browser console and terminal logs after submitting the quiz",
+        "Inspect the responses object passed to calculateScores()",
+        "Verify that calculateScores() returns a complete object with 12 valid numeric scores",
+        "Check the output from HarmonyEngine (analyzeHarmony), ensure it returns dominant, weakest, insight, and theme",
+        "Ensure HoloboidRadarChart receives valid props: all 12 scores with numeric values",
+        "Ensure HarmonyInsight is rendered only if required props are valid",
+        "Check for any null, undefined, or empty values passed to key components",
+        "Validate any dynamic theming logic (e.g., theme[dominantCategory]) for possible undefined lookups",
+        "If Firestore is involved in retrieving responses, check for missing or malformed documents"
+    ],
+    "expected_outcome": "Identify and patch the source of the runtime error by applying defensive checks and fixing upstream data issues in the results pipeline."
+}

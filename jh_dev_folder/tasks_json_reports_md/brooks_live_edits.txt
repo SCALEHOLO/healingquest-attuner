@@ -1,0 +1,41 @@
+Logout button top right–nav bar needs to be functional.
+
+pure freedom is timeless, formless–to become enlightened is to become photonic–light.
+
+question number 1: slider 1 - 10
+question number 2: 1 = rarely, 10 = consistently
+
+Dimension	Sample Question (Format)	Rationale / What it Measures
+1	Mental	“On a scale of 1–10, how clear and focused do you feel in your thinking and decision-making this week?”	
+Captures cognitive clarity and self-perceived mental presence.
+
+2	Emotional	“How able are you to recognize and process your emotions in real time?”(1 = rarely, 10 = consistently)	
+Gauges emotional intelligence and real-time awareness.
+
+3	Professional	“Which statement best describes your current relationship with your work/calling?”(MC: A) 
+Inspired daily B) Sometimes purposeful C) Going through motions D) Feeling stuck)	Taps into work fulfillment and professional flow.
+
+4	Physical	“How energized, healthy, and vital do you feel in your body right now?”(1–10)	
+Quick somatic check-in; tracks body-mind alignment.
+
+5	Spiritual	“How often do you feel connected to a sense of purpose, meaning, or something greater than 
+yourself?”(MC: A) Daily B) Weekly C) Occasionally D) Rarely)	Assesses depth/frequency of spiritual connection.
+
+6	Financial	“How confident are you in your current financial path and ability to create future abundance?”(1–10)
+	Measures money mindset, confidence, and empowerment.
+
+7	Relational	“To what extent do your closest relationships feel nourishing, authentic, and mutually supportive?”(1–10)	Measures relational health and emotional safety.
+
+8	Environmental	“How supported do you feel by your living/working environment (nature, home, community)?”(1–10)	Checks resonance with immediate surroundings.
+
+9	Holistic	
+    “How well do you see and work with the interconnectedness of all areas of your life?”(1–10, plus an optional example prompt)	Assesses systems-thinking and holistic perception.
+
+10	Integration	“How easily do you integrate lessons and experiences from one area of your life into others?”(MC: A) 
+Seamlessly B) Sometimes C) Rarely D) Never)	Measures ability to cross-pollinate growth.
+
+11	Consciousness	“How present and aware do you feel in your daily experience?”(1–10)	Taps into state of mindfulness 
+and meta-awareness.
+
+12	Resonance	“How strongly do you sense alignment with your core values and deeper patterns in your life?”(1–10, 
+longform: ‘What patterns feel most resonant right now?’)	Measures frequency alignment and soul congruence.

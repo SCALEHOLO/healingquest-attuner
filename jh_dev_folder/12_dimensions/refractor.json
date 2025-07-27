@@ -1,0 +1,30 @@
+{
+    "task": "Refactor quizQuestions.ts to support random question selection per dimension",
+    "objectives": [
+        {
+            "id": "refactor.question_pool",
+            "description": "Convert the current flat 12-question array into a `questionPool` object where each of the 12 dimensions maps to an array of 2–4 questions."
+        },
+        {
+            "id": "utility.randomizer",
+            "description": "Create and export a `getRandomQuizQuestions()` function that returns an array of 12 questions — one randomly selected per dimension."
+        },
+        {
+            "id": "type.safety",
+            "description": "Ensure the TypeScript types support multiple questions per dimension and the return shape matches the original quiz input format."
+        },
+        {
+            "id": "backward.compat",
+            "description": "Preserve compatibility with components currently consuming the static `quizQuestions` array by changing it to a function call result if needed."
+        }
+    ],
+    "files": [
+        "src/data/quizQuestions.ts"
+    ],
+    "success_criteria": [
+        "`questionPool` contains all 12 dimensions as keys, each with multiple question objects",
+        "`getRandomQuizQuestions()` reliably returns one question per dimension",
+        "TypeScript validation passes without errors",
+        "Quiz initialization uses randomized questions without breaking existing logic"
+    ]
+}

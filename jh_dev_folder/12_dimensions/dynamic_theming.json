@@ -1,0 +1,11 @@
+{
+    "task": "Enable dynamic theming on results page based on dominant attunement category",
+    "description": "Update the results page layout to change background color, highlight gradients, or container classes based on the dominant category output by HarmonyEngine.",
+    "requirements": [
+        "Use tailwind-style classes to switch theme via `themeColor`",
+        "Ensure fallback/default class is applied if no dominant",
+        "Create optional overlays (e.g., SVG pattern or symbolic gradient)",
+        "Theme should sync with chart + HarmonyInsight components"
+    ],
+    "location": "src/app/results/page.tsx"
+}

@@ -1,0 +1,11 @@
+{
+    "task": "Update HoloboidRadarChart.tsx to support 12-dimensional radar chart",
+    "description": "Extend the current 8-axis radar chart to render 12 attunement dimensions. Ensure responsive rendering, category labels, and highlight logic still apply.",
+    "requirements": [
+        "Ensure labels map to: Mental, Emotional, Physical, Spiritual, Financial, Relational, Environmental, Professional, Holistic, Integration, Consciousness, Resonance",
+        "Adjust chart config to handle 12 data points with animation and fill",
+        "Ensure themeColor and highlightDominant still apply",
+        "Update fallback error handling if scores prop is incomplete"
+    ],
+    "location": "src/components/HoloboidRadarChart.tsx"
+}

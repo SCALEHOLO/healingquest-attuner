@@ -1,0 +1,46 @@
+{
+    "task": "Create HoloboidRadarChart.tsx component for dynamic attunement score visualization",
+    "description": "Implement a reusable radar chart component in `src/components/` that displays the user's attunement profile using an animated 8-axis chart.",
+    "requirements": [
+        {
+            "title": "Input Props",
+            "details": [
+                "Accept a required prop `scores` in the format:",
+                "{ mental: number, emotional: number, physical: number, spiritual: number, environmental: number, social: number, financial: number, creative: number }",
+                "Optional prop `themeColor` (default fallback to purple or category-based color)"
+            ]
+        },
+        {
+            "title": "Chart Configuration",
+            "details": [
+                "Use `react-chartjs-2` with `chart.js`",
+                "Configure radar chart with 8 axes labeled by category",
+                "Scale values from 0–10",
+                "Apply subtle animations on initial render using `easing: 'easeOutQuart'`"
+            ]
+        },
+        {
+            "title": "Styling & Responsiveness",
+            "details": [
+                "Use TailwindCSS for layout and container styling",
+                "Ensure mobile responsiveness and dark mode support",
+                "Chart should be centered and max width constrained"
+            ]
+        },
+        {
+            "title": "Error Handling & Fallbacks",
+            "details": [
+                "If `scores` is missing or malformed, display a fallback error message component",
+                "Use defensive defaults to avoid runtime crashes"
+            ]
+        },
+        {
+            "title": "Bonus Features (Optional)",
+            "details": [
+                "Expose an `exportRef` or `onExport` prop to allow saving chart as PNG",
+                "Allow highlighting the dominant category visually (e.g., outline or halo effect)"
+            ]
+        }
+    ],
+    "location": "src/components/HoloboidRadarChart.tsx"
+}

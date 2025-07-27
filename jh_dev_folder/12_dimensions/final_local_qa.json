@@ -1,0 +1,20 @@
+{
+    "task": "Perform a complete pre-deployment QA of the HOLO Healing Quest app in local development",
+    "description": "Test all major user flows and system integrations for correctness, styling, data persistence, and error handling. Ensure the entire app behaves as expected before pushing to GitHub and deploying to Vercel.",
+    "checklist": [
+        "Start local dev server: npm run dev",
+        "Visit landing page: check layout, button routing, mobile responsiveness",
+        "Login with Firebase (email/Google): confirm redirect to /quiz",
+        "Complete full 12-dimension quiz flow: all question types, notes, validation",
+        "Submit responses: ensure redirect to /results and Firebase document is created",
+        "Verify Firestore entry includes: responses[], totals, overallAverage, insight, dominant, weakest, theme",
+        "Results Page: check that radar chart renders 12 dimensions accurately with animation",
+        "Theming: validate dynamic colors, overlays, and HarmonyInsight match dominant category",
+        "Email summary: test email entry form, image export, and success/failure states (mock if needed)",
+        "Handle quiz with incomplete or invalid inputs gracefully",
+        "Test longform note inputs and response persistence",
+        "Console log: no errors or warnings throughout the flow",
+        "Review Lighthouse / mobile responsiveness (optional)"
+    ],
+    "expected_output": "A report confirming each item passed or identifying specific breakpoints or visual/logic inconsistencies."
+}

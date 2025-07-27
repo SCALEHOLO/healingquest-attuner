@@ -1,0 +1,15 @@
+{
+    "task": "Add optional email summary flow using EmailJS",
+    "description": "Allow users to optionally receive a summary of their results (radar chart + insight) via email at the end of the quiz.",
+    "requirements": [
+        "Include call-to-action (email input + send button) on results page",
+        "Use EmailJS with template to send result summary",
+        "Attach image export of radar chart (via exportRef)",
+        "Include dominant/weakest + Harmony insight in email body",
+        "Display success/failure feedback to user"
+    ],
+    "dependencies": [
+        "EmailJS SDK",
+        "chart image export utility (already present)"
+    ]
+}

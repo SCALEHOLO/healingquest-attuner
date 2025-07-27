@@ -13,29 +13,29 @@ const CATEGORY_COLORS: Record<string, string> = {
 }
 
 type HarmonyInsightProps = {
-    dominantCategory: string
+    dominant: string
     insight: string
-    weakestCategory?: string
+    weakest?: string
     theme?: string
     tone?: "neutral" | "positive" | "gentle" | "bold"
     callToAction?: string
 }
 
 export const HarmonyInsight: React.FC<HarmonyInsightProps> = ({
-    dominantCategory,
+    dominant,
     insight,
-    weakestCategory,
+    weakest,
     theme,
     tone = "neutral",
     callToAction
 }) => {
-    if (!dominantCategory || !insight) {
+    if (!dominant || !insight) {
         return null
     }
 
     // Pick color for dominant or fallback
     const domColor =
-        CATEGORY_COLORS[dominantCategory.toLowerCase()] ||
+        CATEGORY_COLORS[dominant.toLowerCase()] ||
         (theme ? `${theme}` : "bg-gray-200 text-gray-900")
 
     // Animation classes
@@ -62,15 +62,15 @@ export const HarmonyInsight: React.FC<HarmonyInsightProps> = ({
                         domColor
                     )}
                 >
-                    Dominant: {dominantCategory.charAt(0).toUpperCase() + dominantCategory.slice(1)}
+                    Dominant: {dominant.charAt(0).toUpperCase() + dominant.slice(1)}
                 </span>
-                {weakestCategory && (
+                {weakest && (
                     <span
                         className={clsx(
                             "px-3 py-1 rounded-full font-semibold text-sm shadow bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                         )}
                     >
-                        Weakest: {weakestCategory.charAt(0).toUpperCase() + weakestCategory.slice(1)}
+                        Weakest: {weakest.charAt(0).toUpperCase() + weakest.slice(1)}
                     </span>
                 )}
                 {theme && (
