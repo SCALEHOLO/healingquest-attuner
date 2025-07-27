@@ -1,0 +1,46 @@
+{
+    "task": "Finalize V1 launch readiness and QA the full attunement quiz experience",
+    "description": "Ensure the entire user flow works from quiz start to result submission, including HarmonyEngine integration, Firebase storage, and summary email. Fix any breaking issues and flag missing connections.",
+    "requirements": [
+        {
+            "title": "QA Functional Flow",
+            "details": [
+                "Complete quiz end-to-end locally (`npm run dev`)",
+                "Verify calculateScores and HarmonyEngine log properly in console",
+                "Ensure HoloboidRadarChart renders dynamic scores",
+                "Ensure HarmonyInsight displays correct message based on dominant category"
+            ]
+        },
+        {
+            "title": "Firebase Verification",
+            "details": [
+                "Confirm Firestore record includes responses, scores, dominantCategory, weakestCategory, insight, and theme"
+            ]
+        },
+        {
+            "title": "Email Summary Test",
+            "details": [
+                "Trigger email sending (via EmailJS or Firebase Functions)",
+                "Check email deliverability and rendering",
+                "Log and catch any send errors"
+            ]
+        },
+        {
+            "title": "Kiosk & Mobile QA",
+            "details": [
+                "Test experience on iPad/tablet (landscape mode)",
+                "Verify button sizes, text, and navigation usability",
+                "Check that session persists during quiz flow"
+            ]
+        },
+        {
+            "title": "Deployment Prep",
+            "details": [
+                "Ensure .env.local is ready for Vercel (Firebase keys)",
+                "Remove console logs in production mode",
+                "Run `npm run build` and verify no errors"
+            ]
+        }
+    ],
+    "location": "Project root: holistic-attunement-app"
+}

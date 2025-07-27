@@ -1,0 +1,47 @@
+{
+    "task": "Implement Firebase quiz submission and score saving",
+    "description": "Create logic in `src/services/saveResults.ts` to persist user quiz data to Firebase. This includes raw responses, computed scores, and harmony engine output.",
+    "requirements": [
+        {
+            "title": "Input",
+            "details": [
+                "Accept: userId (string), email (string), responses (object of questionId → number), scores (object of category → number), insightData (output from HarmonyEngine)"
+            ]
+        },
+        {
+            "title": "Storage Location",
+            "details": [
+                "Use Firebase Firestore",
+                "Write to collection: `quizResults`",
+                "Document ID should match userId or auto-generated if unavailable"
+            ]
+        },
+        {
+            "title": "Stored Fields",
+            "details": [
+                "timestamp (serverTimestamp)",
+                "email",
+                "responses",
+                "scores",
+                "dominantCategory",
+                "weakestCategory",
+                "insight",
+                "theme"
+            ]
+        },
+        {
+            "title": "Error Handling",
+            "details": [
+                "Log and catch any Firestore write errors",
+                "Return success boolean or throw error to caller"
+            ]
+        },
+        {
+            "title": "Bonus",
+            "details": [
+                "Allow optional config to also save to `leads` collection if lead capture is enabled"
+            ]
+        }
+    ],
+    "location": "src/services/saveResults.ts"
+}

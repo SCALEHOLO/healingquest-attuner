@@ -1,0 +1,12 @@
+{
+    "task": "Audit Rita's questionnaire work for Brooks’s requested schema",
+    "description": "Scan the codebase (especially under `src/data/quizQuestions.ts`, `src/services/calculateScores.ts`, and any Firestore structure) and report whether Brooks's 12-dimension format is implemented, partially implemented, or not present.",
+    "checkpoints": [
+        "Does `quizQuestions.ts` reflect all 12 dimensions from the signal_notes.txt file?",
+        "Are multiple-choice mappings (1–4 scores) implemented in logic?",
+        "Does any logic process longform responses or notes?",
+        "Does Firestore submission include `overall_average`, `totals`, and raw `responses[]` array?",
+        "If not, is the current structure still based on the original 8-category system?"
+    ],
+    "output": "Return a summary of what is present, what’s missing, and where Rita left off."
+}

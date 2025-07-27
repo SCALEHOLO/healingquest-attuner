@@ -1,0 +1,46 @@
+{
+    "task": "Rewire results page to replace legacy visuals with HarmonyEngine-based dynamic components",
+    "description": "Fully replace the legacy `signal.svg` and static text blocks on `src/app/results/page.tsx` with dynamic chart and insight rendering. Use `calculateScores` to derive scores, then pass those into `HarmonyEngine` and render both HoloboidRadarChart and HarmonyInsight accordingly.",
+    "requirements": [
+        {
+            "title": "Import Required Modules",
+            "details": [
+                "Import `calculateScores` from `@/services/calculateScores.ts`",
+                "Import `HarmonyEngine` from `@/services/HarmonyEngine.ts`",
+                "Import `HoloboidRadarChart` and `HarmonyInsight` from `@/components`"
+            ]
+        },
+        {
+            "title": "Data Flow",
+            "details": [
+                "Extract `responses` from props, context, or route state",
+                "Call `calculateScores(responses)` to get `scores`",
+                "Call `HarmonyEngine(scores)` to get `insightData`"
+            ]
+        },
+        {
+            "title": "Render Components",
+            "details": [
+                "Render `<HoloboidRadarChart scores={scores} themeColor={insightData.theme} />`",
+                "Render `<HarmonyInsight {...insightData} />` below chart",
+                "Optional: Add a CTA or reflection button below the insight"
+            ]
+        },
+        {
+            "title": "Remove Deprecated Code",
+            "details": [
+                "Remove `signal.svg` image",
+                "Remove `getPersonalizedInsight()` and its output",
+                "Delete or archive any static HTML blocks from previous results layout"
+            ]
+        },
+        {
+            "title": "Error Handling",
+            "details": [
+                "If `responses` are missing, redirect to quiz",
+                "If `HarmonyEngine` fails, show fallback message"
+            ]
+        }
+    ],
+    "location": "src/app/results/page.tsx"
+}

@@ -1,0 +1,38 @@
+{
+    "task": "Create HarmonyInsight.tsx component to display user's interpretation",
+    "description": "Create a styled component in `src/components/` that receives HarmonyEngine output and presents the insight, dominant/weakest categories, and an optional theme label.",
+    "requirements": [
+        {
+            "title": "Input Props",
+            "details": [
+                "Required: `dominantCategory` (string)",
+                "Required: `insight` (string)",
+                "Optional: `weakestCategory`, `theme`, `tone`, `callToAction`"
+            ]
+        },
+        {
+            "title": "UI Elements",
+            "details": [
+                "Section header (e.g., 'Your Wholeness Signature')",
+                "Paragraph insight text styled with soft typography",
+                "Tags for dominant/weakest categories (e.g., badges or chips)",
+                "Call-to-action text or button (e.g., 'Start a healing plan', if provided)"
+            ]
+        },
+        {
+            "title": "Styling",
+            "details": [
+                "Use TailwindCSS for layout",
+                "Animate entrance (fade-in or slide-up)",
+                "Use theme color or dominant category color (fallback to neutral)"
+            ]
+        },
+        {
+            "title": "Error Handling",
+            "details": [
+                "If required props are missing, render nothing or a fallback message"
+            ]
+        }
+    ],
+    "location": "src/components/HarmonyInsight.tsx"
+}

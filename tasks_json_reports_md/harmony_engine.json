@@ -1,0 +1,43 @@
+{
+    "task": "Build HarmonyEngine.ts to interpret 8-category attunement scores",
+    "description": "Create a file named `HarmonyEngine.ts` inside `src/services/`. This module will analyze the normalized attunement scores and return insights for the user.",
+    "requirements": [
+        {
+            "title": "Input",
+            "details": [
+                "Accept an object with 8 keys: mental, emotional, physical, spiritual, environmental, social, financial, creative",
+                "Each value is a number between 0–10"
+            ]
+        },
+        {
+            "title": "Output",
+            "details": [
+                "Return an object like:",
+                "{ dominantCategory: 'emotional', weakestCategory: 'financial', insight: string, theme: string }"
+            ]
+        },
+        {
+            "title": "Logic",
+            "details": [
+                "Identify dominant and weakest categories (highest and lowest scores)",
+                "Use simple rule-based logic to return a short 'insight' message per dominant category",
+                "Return a matching 'theme' string to drive dynamic theming later (e.g., 'light-mind', 'earth-heart')"
+            ]
+        },
+        {
+            "title": "Logging",
+            "details": [
+                "Log the input vector",
+                "Log the computed dominant and weakest categories"
+            ]
+        },
+        {
+            "title": "Error Handling",
+            "details": [
+                "Gracefully handle missing or malformed input",
+                "Fallback to generic values if needed"
+            ]
+        }
+    ],
+    "location": "src/services/HarmonyEngine.ts"
+}
