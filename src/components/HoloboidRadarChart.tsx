@@ -52,18 +52,18 @@ const CATEGORY_LABELS: { [K in AttunementDimension]: string } = {
 };
 
 const CATEGORY_COLORS: { [K in AttunementDimension]: string } = {
-    Mental: "#7c3aed", // purple
-    Emotional: "#f472b6", // pink
-    Physical: "#34d399", // green
-    Spiritual: "#60a5fa", // blue
-    Financial: "#facc15", // gold
-    Relational: "#f87171", // red
-    Environmental: "#38bdf8", // blue-cyan
-    Professional: "#6366f1", // indigo
-    Holistic: "#06b6d4", // cyan
-    Integration: "#a3e635", // lime
-    Consciousness: "#818cf8", // violet
-    Resonance: "#fb7185", // rose
+    Mental: "#8d6ff2ff",        // soft indigo
+    Emotional: "#f15987ff",     // soft magenta
+    Physical: "#f24f14ff",      // soft green
+    Spiritual: "#f4a92fff",     // soft blue
+    Financial: "#e2c97b",     // soft gold
+    Relational: "#a2f48bff",    // soft red
+    Environmental: "#9dd9eeff", // soft teal
+    Professional: "#c471c1ff",  // soft blue-violet
+    Holistic: "#7bd1c6",      // soft cyan
+    Integration: "#b7d17b",   // soft lime
+    Consciousness: "#b07bd1", // soft violet
+    Resonance: "#d17bb0",     // soft rose
 };
 
 const RADAR_SIZE = 400;
@@ -138,22 +138,27 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
         <div
             className={clsx(
                 "flex flex-col items-center justify-center w-full",
-                "max-w-xl mx-auto p-4 rounded-lg shadow-lg",
+                "max-w-xl mx-auto p-4 sm:p-6 lg:p-8",
                 "border border-gray-200 dark:border-gray-700",
-                "bg-gradient-to-br from-[#1e2156] to-[#2a2e6e]"
+                "relative"
             )}
+            style={{
+                background: "radial-gradient(ellipse at 60% 40%, #7ec6f7 0%, #3a6ea5 60%, #1b2e4b 100%)"
+            }}
         >
             <svg
-                width={RADAR_SIZE}
-                height={RADAR_SIZE}
-                viewBox={`0 0 ${RADAR_SIZE} ${RADAR_SIZE}`}
-                style={{ display: "block", margin: "0 auto" }}
+                width={RADAR_SIZE + 120}
+                height={RADAR_SIZE + 96}
+                viewBox={`-60 -48 ${RADAR_SIZE + 120} ${RADAR_SIZE + 96}`}
+                style={{ display: "block", margin: "0 auto", background: "none" }}
                 ref={exportRef as React.RefObject<SVGSVGElement> | undefined}
             >
                 {/* Colored energy zones */}
                 {DIMENSIONS.map((dim, i) => {
+                    // Place each circle so its inner edge touches the radar center, but does not extend past the grid
                     const angle = -Math.PI / 2 + (i * 2 * Math.PI) / DIMENSIONS.length;
-                    const zoneRadius = RADIUS * 0.85;
+                    // Reduce radius so circles just touch the center and do not extend past the grid
+                    const zoneRadius = RADIUS / 2;
                     const x = CENTER + zoneRadius * Math.cos(angle);
                     const y = CENTER + zoneRadius * Math.sin(angle);
                     return (
@@ -161,12 +166,13 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
                             key={dim}
                             cx={x}
                             cy={y}
-                            r={RADIUS * 0.55}
+                            r={zoneRadius}
                             fill={CATEGORY_COLORS[dim]}
-                            fillOpacity={0.18}
+                            fillOpacity={0.54}
                             style={{
-                                filter: "blur(2.5px)",
-                                mixBlendMode: "screen",
+                                filter: "blur(1.2px)",
+                                mixBlendMode: "lighten",
+                                transition: "r 0.3s, fill 0.3s"
                             }}
                         />
                     );
@@ -230,12 +236,12 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
 
                 {/* Tick labels */}
                 {TICK_VALUES.map((tick) => {
-                    if (tick === 0) return null;
+                    const yOffset = (tick / 10) * RADIUS;
                     return (
                         <text
                             key={tick}
                             x={CENTER}
-                            y={CENTER - (tick / 10) * RADIUS - 6}
+                            y={CENTER - yOffset}
                             textAnchor="middle"
                             fontSize={13}
                             fill="#fff"
@@ -251,7 +257,7 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
                 {/* Axis labels */}
                 {DIMENSIONS.map((dim, i) => {
                     const angle = -Math.PI / 2 + (i * 2 * Math.PI) / DIMENSIONS.length;
-                    const labelRadius = RADIUS + 32;
+                    const labelRadius = RADIUS + 48;
                     const x = CENTER + labelRadius * Math.cos(angle);
                     const y = CENTER + labelRadius * Math.sin(angle);
                     return (
@@ -261,7 +267,7 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
                             y={y}
                             textAnchor="middle"
                             dominantBaseline="middle"
-                            fontSize={17}
+                            fontSize={15}
                             fontWeight="bold"
                             fill="#fff"
                             style={{

@@ -18,11 +18,11 @@
 
 **Objectives:** Replace the original attuner.ai questions with updated Healing Quest content.
 
-- [ ] Update quiz text ("Discover your consciousness profile" → "Discover your wholeness profile")
-- [ ] Replace questionnaire with Brooks' new questions (8 life dimensions + meta categories)
-- [ ] Confirm quiz uses various input types (not just multiple choice)
-- [ ] Ensure page-by-page navigation works (Next/Back)
-- [ ] Validate mobile-responsiveness and accessibility of quiz UI
+- [x] Update quiz text ("Discover your consciousness profile" → "Discover your wholeness profile")
+- [x] Replace questionnaire with Brooks' new questions (8 life dimensions + meta categories)
+- [x] Confirm quiz uses various input types (not just multiple choice)
+- [x] Ensure page-by-page navigation works (Next/Back)
+- [x] Validate mobile-responsiveness and accessibility of quiz UI
 
 ---
 
@@ -47,9 +47,9 @@
 - [X] Animate chart rendering with easing effect
 - [X] Create `HarmonyInsight.tsx` to display interpretation and suggestions
 - [ ] Enable dynamic theming based on dominant trait
-  - [ ] Colors
-  - [ ] SVG overlays
-  - [ ] Optional: particle background
+  - [x] Colors
+  - [x] SVG overlays
+  - [x] Optional: particle background
 
 ---
 
@@ -58,8 +58,8 @@
 **Objectives:** Hook up completion actions for event use and future analysis.
 
 - [X] **[Step 5]** Store raw quiz responses in Firebase under user ID/email
-- [ ] **[Step 6]** Auto-generate summary email with chart + insight (EmailJS or Firebase Function)
-- [ ] Store interpreted result separately for dashboard queries
+- [x] **[Step 6]** Auto-generate summary email with chart + insight (EmailJS or Firebase Function)
+- [x] Store interpreted result separately for dashboard queries
 
 ---
 
@@ -67,8 +67,8 @@
 
 **Objectives:** Prep for real-world usage at Sunday event.
 
-- [ ] Deploy app to `holohealingquest.attuner.ai`
-- [ ] Generate & test working QR code to app landing page
-- [ ] Confirm full flow: landing → quiz → score → email
-- [ ] Cross-browser test (Safari, Chrome, mobile)
-- [ ] Perform final runthrough using test email to simulate participant
+- [x] Deploy app to `holohealingquest.attuner.ai`
+- [x] Generate & test working QR code to app landing page
+- [x] Confirm full flow: landing → quiz → score → email
+- [x] Cross-browser test (Safari, Chrome, mobile)
+- [x] Perform final runthrough using test email to simulate participant

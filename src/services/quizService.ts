@@ -64,9 +64,9 @@ export const saveIndividualResponse = async (userId: string, email: string, ques
       lastUpdated: serverTimestamp()
     }, { merge: true });
 
-    console.log('✅ Individual response saved successfully');
+    console.log('Individual response saved successfully');
   } catch (error) {
-    console.error('❌ Error saving individual response:', error);
+    console.error('Error saving individual response:', error);
     // Don't throw error to avoid disrupting quiz flow
   }
 };
@@ -75,14 +75,14 @@ export const saveQuizResults = async (submission: QuizSubmission): Promise<void>
   try {
     const { responses, email, userId, userExperience } = submission;
 
-    console.log('🔥 QUIZ SERVICE: Starting to save quiz results...');
-    console.log('📧 Email:', email);
-    console.log('🆔 User ID:', userId);
-    console.log('📝 Raw responses:', responses);
+    console.log('QUIZ SERVICE: Starting to save quiz results...');
+    console.log('Email:', email);
+    console.log('User ID:', userId);
+    console.log('Raw responses:', responses);
 
     // Calculate scores
     const scores = calculateScores(responses);
-    console.log('📊 Calculated scores:', scores);
+    console.log('Calculated scores:', scores);
 
     // Convert responses to QuizResponse format
     const quizResponses: QuizResponse[] = Object.entries(responses).map(([questionId, value]) => ({
@@ -100,7 +100,7 @@ export const saveQuizResults = async (submission: QuizSubmission): Promise<void>
       completedAt: new Date(),
       scores
     };
-    console.log('📦 User quiz data to save:', userQuizData);
+    console.log('User quiz data to save:', userQuizData);
 
     // Save to Firestore under user's UID
     const docRef = doc(db, 'quizResults', userId);
@@ -111,7 +111,7 @@ export const saveQuizResults = async (submission: QuizSubmission): Promise<void>
       completedAt: serverTimestamp(),
       responses: quizResponses // Don't use serverTimestamp() inside arrays
     });
-    console.log('✅ Successfully saved to quizResults collection');
+    console.log('Successfully saved to quizResults collection');
 
     // Also save to leads collection for marketing
     const leadData = {
@@ -122,14 +122,14 @@ export const saveQuizResults = async (submission: QuizSubmission): Promise<void>
       completedAt: serverTimestamp(),
       source: 'quiz'
     };
-    console.log('📈 Saving lead data:', leadData);
+    console.log('Saving lead data:', leadData);
 
     await addDoc(collection(db, 'leads'), leadData);
-    console.log('✅ Successfully saved to leads collection');
+    console.log('Successfully saved to leads collection');
 
-    console.log('🎉 Quiz results saved successfully to both collections!');
+    console.log('Quiz results saved successfully to both collections!');
   } catch (error) {
-    console.error('❌ Error saving quiz results:', error);
+    console.error('Error saving quiz results:', error);
     throw error;
   }
 };
