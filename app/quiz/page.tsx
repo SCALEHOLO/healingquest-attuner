@@ -1,22 +1,26 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
-import { quizQuestions } from '@/data/quizQuestions';
-import { saveQuizResults } from '@/services/quizService';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import Button from '@/components/Button';
-import SliderInput from '@/components/SliderInput';
-import Image from 'next/image';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { quizQuestions } from "@/data/quizQuestions";
+// COMMENTED OUT FIREBASE IMPORT - FOR LATER USE
+// import { saveQuizResults } from "@/services/quizService";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import Button from "@/components/Button";
+import SliderInput from "@/components/SliderInput";
+import Image from "next/image";
 
 export default function QuizPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [userExperience, setUserExperience] = useState('');
-  const [isUserExperienceSubmitted, setIsUserExperienceSubmitted] = useState(false);
-  const [responses, setResponses] = useState<{ [questionId: string]: number }>({});
+  const [userExperience, setUserExperience] = useState("");
+  const [isUserExperienceSubmitted, setIsUserExperienceSubmitted] =
+    useState(false);
+  const [responses, setResponses] = useState<{ [questionId: string]: number }>(
+    {}
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const { user } = useAuth();
   const router = useRouter();
@@ -35,9 +39,9 @@ export default function QuizPage() {
     const newResponses = { ...responses, [questionId]: value };
     setResponses(newResponses);
 
-    console.log('Response recorded:', { questionId, value });
-    console.log('Current responses:', newResponses);
-    console.log('Total responses:', Object.keys(newResponses).length);
+    console.log("Response recorded:", { questionId, value });
+    console.log("Current responses:", newResponses);
+    console.log("Total responses:", Object.keys(newResponses).length);
 
     // Save individual response immediately
     // if (user) {
@@ -45,8 +49,9 @@ export default function QuizPage() {
     // }
 
     // Check if this completes the quiz
-    const isQuizComplete = Object.keys(newResponses).length === quizQuestions.length;
-    console.log('Quiz complete?', isQuizComplete);
+    const isQuizComplete =
+      Object.keys(newResponses).length === quizQuestions.length;
+    console.log("Quiz complete?", isQuizComplete);
 
     // No auto-advance - user must click Next button
   };
@@ -56,7 +61,7 @@ export default function QuizPage() {
     const hasAnswered = responses[currentQuestionId] !== undefined;
 
     if (hasAnswered && currentQuestion < quizQuestions.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
+      setCurrentQuestion((prev) => prev + 1);
     }
   };
 
@@ -64,43 +69,68 @@ export default function QuizPage() {
     if (!user) return;
 
     setIsSubmitting(true);
-    setError('');
+    setError("");
 
-    console.log('Starting quiz submission...');
-    console.log('User ID:', user.uid);
-    console.log('User Email:', user.email);
-    console.log('Responses:', responses);
-    console.log('Number of responses:', Object.keys(responses).length);
+    console.log("Starting quiz submission...");
+    console.log("User ID:", user.uid);
+    console.log("User Email:", user.email);
+    console.log("Responses:", responses);
+    console.log("Number of responses:", Object.keys(responses).length);
 
     try {
-      await saveQuizResults({
-        responses,
+      // COMMENTED OUT FIREBASE SAVE - FOR LATER USE
+      // await saveQuizResults({
+      //   responses,
+      //   email: user.email!,
+      //   userId: user.uid,
+      //   userExperience,
+      // });
+
+      // NEW: Save data to localStorage for direct passing to results page
+      const quizData = {
+        responses: Object.entries(responses).map(([questionId, value]) => ({
+          questionId,
+          value,
+          timestamp: new Date(),
+        })),
         email: user.email!,
         userId: user.uid,
-        userExperience
-      });
+        userExperience,
+        completedAt: new Date(),
+      };
 
-      console.log('Quiz results saved successfully!');
-      router.push('/results');
+      // Save to localStorage
+      localStorage.setItem("attuner_quiz_data", JSON.stringify(quizData));
+      console.log("Quiz data saved to localStorage:", quizData);
+
+      console.log("Quiz results processed successfully!");
+      router.push("/results");
     } catch (err: unknown) {
-      console.error('Error saving quiz:', err);
-      setError('Failed to save your responses. Please try again.');
+      console.error("Error processing quiz:", err);
+      setError("Failed to process your responses. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const isComplete = Object.keys(responses).length === quizQuestions.length;
-  const progress = isComplete ? 100 : ((currentQuestion + 1) / quizQuestions.length) * 100;
+  const progress = isComplete
+    ? 100
+    : ((currentQuestion + 1) / quizQuestions.length) * 100;
 
   // Debug: Show which questions are missing
   useEffect(() => {
     const answeredQuestions = Object.keys(responses);
-    const missingQuestions = quizQuestions.filter(q => !answeredQuestions.includes(q.id));
+    const missingQuestions = quizQuestions.filter(
+      (q) => !answeredQuestions.includes(q.id)
+    );
     if (missingQuestions.length > 0) {
-      console.log('Missing questions:', missingQuestions.map(q => q.id));
-      console.log('Answered questions:', answeredQuestions);
-      console.log('Current question:', quizQuestions[currentQuestion]?.id);
+      console.log(
+        "Missing questions:",
+        missingQuestions.map((q) => q.id)
+      );
+      console.log("Answered questions:", answeredQuestions);
+      console.log("Current question:", quizQuestions[currentQuestion]?.id);
     }
   }, [responses, currentQuestion]);
 
@@ -124,7 +154,9 @@ export default function QuizPage() {
               <div className="flex items-center space-x-4">
                 <div className="text-xs sm:text-sm text-gray-300">
                   {isComplete ? (
-                    <span className="text-cyan-400 font-semibold">Complete!</span>
+                    <span className="text-cyan-400 font-semibold">
+                      Complete!
+                    </span>
                   ) : (
                     `Question ${currentQuestion + 1} of ${quizQuestions.length}`
                   )}
@@ -181,53 +213,69 @@ export default function QuizPage() {
                 </div>
 
                 <div className="space-y-3 sm:space-y-4">
-                  {quizQuestions[currentQuestion].ui === 'slider' ? (
+                  {quizQuestions[currentQuestion].ui === "slider" ? (
                     <SliderInput
-                      value={responses[quizQuestions[currentQuestion].id] ?? quizQuestions[currentQuestion].min ?? 1}
-                      onChange={val => handleResponse(val)}
+                      value={
+                        responses[quizQuestions[currentQuestion].id] ??
+                        quizQuestions[currentQuestion].min ??
+                        1
+                      }
+                      onChange={(val) => handleResponse(val)}
                       min={quizQuestions[currentQuestion].min ?? 1}
                       max={quizQuestions[currentQuestion].max ?? 10}
                       label="Select your score"
                     />
                   ) : (
-                    quizQuestions[currentQuestion].options?.map((option, index) => {
-                      const value = option.score;
-                      const label = option.label;
-                      const isSelected = responses[quizQuestions[currentQuestion].id] === value;
+                    quizQuestions[currentQuestion].options?.map(
+                      (option, index) => {
+                        const value = option.score;
+                        const label = option.label;
+                        const isSelected =
+                          responses[quizQuestions[currentQuestion].id] ===
+                          value;
 
-                      return (
-                        <button
-                          key={index}
-                          onClick={() => handleResponse(value)}
-                          className={`w-full px-5 py-4 sm:px-7 sm:py-5 rounded-2xl border-2 font-semibold text-base sm:text-lg flex items-center justify-between gap-4 transition-all duration-200 touch-manipulation
-                            ${isSelected
-                              ? 'border-cyan-400 bg-gradient-to-r from-cyan-400/30 via-cyan-400/10 to-purple-400/20 text-cyan-300 shadow-[0_0_0_3px_rgba(34,211,238,0.15)] ring-2 ring-cyan-400/30'
-                              : 'border-white/20 bg-white/5 text-white hover:border-cyan-300 hover:bg-cyan-400/10 hover:text-cyan-200 active:bg-cyan-400/20 active:text-cyan-100'
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => handleResponse(value)}
+                            className={`w-full px-5 py-4 sm:px-7 sm:py-5 rounded-2xl border-2 font-semibold text-base sm:text-lg flex items-center justify-between gap-4 transition-all duration-200 touch-manipulation
+                            ${
+                              isSelected
+                                ? "border-cyan-400 bg-gradient-to-r from-cyan-400/30 via-cyan-400/10 to-purple-400/20 text-cyan-300 shadow-[0_0_0_3px_rgba(34,211,238,0.15)] ring-2 ring-cyan-400/30"
+                                : "border-white/20 bg-white/5 text-white hover:border-cyan-300 hover:bg-cyan-400/10 hover:text-cyan-200 active:bg-cyan-400/20 active:text-cyan-100"
                             }
                             group
                           `}
-                          style={{
-                            boxShadow: isSelected
-                              ? '0 0 0 4px rgba(34,211,238,0.18), 0 2px 16px 0 rgba(34,211,238,0.10)'
-                              : undefined
-                          }}
-                        >
-                          <span className="text-left flex-1 text-base sm:text-lg font-medium">{label}</span>
-                          <div className="flex items-center space-x-3">
-                            <span className="text-xs sm:text-base text-gray-300 font-bold min-w-[2ch] text-right">{value}</span>
-                            <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200
-                              ${isSelected
-                                ? 'border-cyan-400 bg-cyan-400/80 shadow-[0_0_8px_2px_rgba(34,211,238,0.25)]'
-                                : 'border-white/40 bg-white/10 group-hover:border-cyan-300 group-hover:bg-cyan-400/20'
-                              }`}>
-                              {isSelected && (
-                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-black rounded-full"></div>
-                              )}
+                            style={{
+                              boxShadow: isSelected
+                                ? "0 0 0 4px rgba(34,211,238,0.18), 0 2px 16px 0 rgba(34,211,238,0.10)"
+                                : undefined,
+                            }}
+                          >
+                            <span className="text-left flex-1 text-base sm:text-lg font-medium">
+                              {label}
+                            </span>
+                            <div className="flex items-center space-x-3">
+                              <span className="text-xs sm:text-base text-gray-300 font-bold min-w-[2ch] text-right">
+                                {value}
+                              </span>
+                              <div
+                                className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200
+                              ${
+                                isSelected
+                                  ? "border-cyan-400 bg-cyan-400/80 shadow-[0_0_8px_2px_rgba(34,211,238,0.25)]"
+                                  : "border-white/40 bg-white/10 group-hover:border-cyan-300 group-hover:bg-cyan-400/20"
+                              }`}
+                              >
+                                {isSelected && (
+                                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-black rounded-full"></div>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        </button>
-                      );
-                    })
+                          </button>
+                        );
+                      }
+                    )
                   )}
                 </div>
 
@@ -243,7 +291,9 @@ export default function QuizPage() {
                 {/* Navigation */}
                 <div className="flex justify-between items-center mt-6 sm:mt-8">
                   <button
-                    onClick={() => setCurrentQuestion(prev => Math.max(0, prev - 1))}
+                    onClick={() =>
+                      setCurrentQuestion((prev) => Math.max(0, prev - 1))
+                    }
                     disabled={currentQuestion === 0}
                     className="px-4 py-2 sm:px-6 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-all text-sm sm:text-base"
                   >
@@ -254,19 +304,23 @@ export default function QuizPage() {
                     {quizQuestions.map((_, index) => (
                       <div
                         key={index}
-                        className={`w-2 h-2 rounded-full transition-all ${index === currentQuestion
-                          ? 'bg-cyan-400'
-                          : responses[quizQuestions[index].id]
-                            ? 'bg-purple-400'
-                            : 'bg-white/20'
-                          }`}
+                        className={`w-2 h-2 rounded-full transition-all ${
+                          index === currentQuestion
+                            ? "bg-cyan-400"
+                            : responses[quizQuestions[index].id]
+                            ? "bg-purple-400"
+                            : "bg-white/20"
+                        }`}
                       />
                     ))}
                   </div>
 
                   <button
                     onClick={handleNext}
-                    disabled={currentQuestion === quizQuestions.length - 1 || responses[quizQuestions[currentQuestion].id] == null}
+                    disabled={
+                      currentQuestion === quizQuestions.length - 1 ||
+                      responses[quizQuestions[currentQuestion].id] == null
+                    }
                     className="px-4 py-2 sm:px-6 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-all text-sm sm:text-base"
                   >
                     Next
@@ -276,7 +330,7 @@ export default function QuizPage() {
             </div>
           ) : (
             <>
-              {isUserExperienceSubmitted ?
+              {isUserExperienceSubmitted ? (
                 <div className="text-center animate-fade-in">
                   <div className="bg-black/20 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-white/10 max-w-2xl mx-auto">
                     <div className="mb-6 sm:mb-8">
@@ -296,27 +350,32 @@ export default function QuizPage() {
                           className="rounded-lg w-[150px] h-[150px] object-cover"
                         />
                       </div>
-                      <div className='flex items-center justify-center mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl font-bold'>
-                        <span className=''>🎉</span>
+                      <div className="flex items-center justify-center mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl font-bold">
+                        <span className="">🎉</span>
                         <h2 className="  bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text !text-[20px] text-transparent sm:text-3xl">
                           Assessment Complete!
                         </h2>
                       </div>
 
                       <p className="text-gray-300 text-base sm:text-lg mb-4 leading-relaxed">
-                        Congratulations! You&apos;ve completed all <strong>8 questions</strong> of your consciousness profile assessment.
+                        Congratulations! You&apos;ve completed all{" "}
+                        <strong>8 questions</strong> of your consciousness
+                        profile assessment.
                       </p>
 
                       <div className="bg-gradient-to-r from-cyan-400/10 to-purple-400/10 rounded-lg p-4 mb-6 sm:mb-8 border border-cyan-400/20">
                         <p className="text-cyan-300 text-sm sm:text-base">
-                          ✨ Your unique HOLO attunement pattern is ready to be revealed
+                          ✨ Your unique HOLO attunement pattern is ready to be
+                          revealed
                         </p>
                       </div>
                     </div>
 
                     {error && (
                       <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-                        <p className="text-red-400 text-sm sm:text-base">{error}</p>
+                        <p className="text-red-400 text-sm sm:text-base">
+                          {error}
+                        </p>
                       </div>
                     )}
 
@@ -333,9 +392,13 @@ export default function QuizPage() {
                           </>
                         ) : (
                           <>
-
-                            <span className='max-w-[200px] sm:max-w-[260px] !text-[20px] sm:!text-[30px] relative' style={{ lineHeight: 1.1 }}>
-                              <span className='text-[30px] absolute left-[-30px] top-[50%] translate-y-[-50%]'>🔮</span>
+                            <span
+                              className="max-w-[200px] sm:max-w-[260px] !text-[20px] sm:!text-[30px] relative"
+                              style={{ lineHeight: 1.1 }}
+                            >
+                              <span className="text-[30px] absolute left-[-30px] top-[50%] translate-y-[-50%]">
+                                🔮
+                              </span>
                               Reveal My Wholeness Profile
                             </span>
                             {/* <svg className="ml-2 w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -363,7 +426,7 @@ export default function QuizPage() {
                     </div>
                   </div>
                 </div>
-                :
+              ) : (
                 <div className="text-center">
                   <div className="bg-black/20 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-white/10 max-w-2xl mx-auto">
                     <div className="mb-6 sm:mb-8">
@@ -376,7 +439,8 @@ export default function QuizPage() {
                       </div>
 
                       <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 leading-tight">
-                        Please describe the most powerful experience you have had with AI.
+                        Please describe the most powerful experience you have
+                        had with AI.
                       </h2>
 
                       {/* {quizQuestions[currentQuestion].description && ( */}
@@ -394,11 +458,14 @@ export default function QuizPage() {
                           return ( */}
                       <textarea
                         // key={index}
-                        onChange={(e) => setUserExperience(e?.target?.value ?? "")}
-                        className={`w-full p-4 sm:p-4 rounded-xl border-2 transition-all duration-200 touch-manipulation h-[200px] ${true
-                          ? 'border-cyan-400 bg-cyan-400/10 text-white'
-                          : 'border-white/20 hover:border-white/40 hover:bg-white/5 active:bg-white/10'
-                          }`}
+                        onChange={(e) =>
+                          setUserExperience(e?.target?.value ?? "")
+                        }
+                        className={`w-full p-4 sm:p-4 rounded-xl border-2 transition-all duration-200 touch-manipulation h-[200px] ${
+                          true
+                            ? "border-cyan-400 bg-cyan-400/10 text-white"
+                            : "border-white/20 hover:border-white/40 hover:bg-white/5 active:bg-white/10"
+                        }`}
                       >
                         {/* <div className="flex items-center justify-between">
                                 <span className="text-left text-sm sm:text-base font-medium">{label}</span>
@@ -421,17 +488,17 @@ export default function QuizPage() {
                         })} */}
                     </div>
 
-
                     {/* Navigation */}
                     <div className="flex justify-between items-center mt-6 sm:mt-8">
                       <button
-                        onClick={() => setCurrentQuestion(prev => Math.max(0, prev - 1))}
+                        onClick={() =>
+                          setCurrentQuestion((prev) => Math.max(0, prev - 1))
+                        }
                         disabled={currentQuestion === 0}
                         className="px-4 py-2 sm:px-6 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-all text-sm sm:text-base"
                       >
                         Previous
                       </button>
-
 
                       <button
                         // onClick={handleNext}
@@ -444,7 +511,7 @@ export default function QuizPage() {
                     </div>
                   </div>
                 </div>
-              }
+              )}
             </>
           )}
         </main>

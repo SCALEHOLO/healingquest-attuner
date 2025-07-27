@@ -1,25 +1,29 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { getUserQuizResults } from '@/services/quizService';
-import { UserQuizData, QuizResponse } from '@/types/quiz';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import Link from 'next/link';
-import Button from '@/components/Button';
-import Image from 'next/image';
-import { calculateScores } from '@/services/calculateScores';
-import { analyzeHarmony } from '@/services/HarmonyEngine';
-import HoloboidRadarChart from '@/components/HoloboidRadarChart';
-import HarmonyInsight from '@/components/HarmonyInsight';
-import { useRef } from 'react';
-import emailjs from 'emailjs-com';
+import { useEffect, useState } from "react";
+// COMMENTED OUT AUTH IMPORTS - NOT NEEDED WITHOUT FIREBASE
+// import { useAuth } from "@/contexts/AuthContext";
+// COMMENTED OUT FIREBASE IMPORTS - FOR LATER USE
+// import { getUserQuizResults } from '@/services/quizService';
+import { UserQuizData, QuizResponse } from "@/types/quiz";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import Link from "next/link";
+import Button from "@/components/Button";
+import Image from "next/image";
+import { calculateScores } from "@/services/calculateScores";
+import { analyzeHarmony } from "@/services/HarmonyEngine";
+import HoloboidRadarChart from "@/components/HoloboidRadarChart";
+import HarmonyInsight from "@/components/HarmonyInsight";
+import { useRef } from "react";
+import emailjs from "emailjs-com";
+
 export default function ResultsPage() {
   const [quizData, setQuizData] = useState<UserQuizData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
-  const { user } = useAuth();
+  // COMMENTED OUT USER - NOT NEEDED WITHOUT FIREBASE
+  // const { user } = useAuth();
 
   // const handleLogout = async () => {
   //   try {
@@ -32,31 +36,59 @@ export default function ResultsPage() {
 
   useEffect(() => {
     const fetchResults = async () => {
-      if (!user) return;
+      // COMMENTED OUT FIREBASE FETCH - FOR LATER USE
+      // if (!user) return;
+      // try {
+      //   const data = await getUserQuizResults(user.uid);
+      //   if (data) {
+      //     setQuizData(data);
+      //   } else {
+      //     setError('No quiz results found. Please take the assessment first.');
+      //   }
+      // } catch {
+      //   setError('Failed to load your results. Please try again.');
+      // } finally {
+      //   setLoading(false);
+      // }
 
+      // NEW: Read data from localStorage
       try {
-        const data = await getUserQuizResults(user.uid);
-        if (data) {
-          setQuizData(data);
+        const storedData = localStorage.getItem("attuner_quiz_data");
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          console.log("Retrieved quiz data from localStorage:", parsedData);
+
+          // Convert the data to the expected UserQuizData format
+          const userQuizData: UserQuizData = {
+            userId: parsedData.userId,
+            email: parsedData.email,
+            responses: parsedData.responses,
+            completedAt: new Date(parsedData.completedAt),
+            scores: {}, // Will be calculated below
+          };
+
+          setQuizData(userQuizData);
         } else {
-          setError('No quiz results found. Please take the assessment first.');
+          setError("No quiz results found. Please take the assessment first.");
         }
-      } catch {
-        setError('Failed to load your results. Please try again.');
-        // Optionally keep the console.error if desired
+      } catch (err) {
+        console.error("Error reading quiz data from localStorage:", err);
+        setError("Failed to load your results. Please try again.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchResults();
-  }, [user]);
+  }, []); // Removed user dependency since we're not using Firebase
 
   // Email summary state (move all hooks to top level)
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [sending, setSending] = useState(false);
-  const [emailStatus, setEmailStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [emailMsg, setEmailMsg] = useState('');
+  const [emailStatus, setEmailStatus] = useState<"idle" | "success" | "error">(
+    "idle"
+  );
+  const [emailMsg, setEmailMsg] = useState("");
   const chartExportRef = useRef<HTMLCanvasElement>(null);
 
   if (loading) {
@@ -65,7 +97,9 @@ export default function ResultsPage() {
         <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-white text-sm sm:text-base">Loading your consciousness profile...</p>
+            <p className="text-white text-sm sm:text-base">
+              Loading your consciousness profile...
+            </p>
           </div>
         </div>
       </ProtectedRoute>
@@ -100,85 +134,94 @@ export default function ResultsPage() {
   const insightData = analyzeHarmony(scores);
 
   // Dynamic theming: map dominant category to Tailwind/hex color and gradient
-  const CATEGORY_THEME: Record<string, { bg: string; gradient: string; color: string }> = {
+  const CATEGORY_THEME: Record<
+    string,
+    { bg: string; gradient: string; color: string }
+  > = {
     Mental: {
       bg: "bg-gradient-to-br from-purple-900 via-violet-800 to-indigo-900",
       gradient: "from-purple-400 to-indigo-500",
-      color: "#7c3aed"
+      color: "#7c3aed",
     },
     Emotional: {
       bg: "bg-gradient-to-br from-pink-500 via-pink-700 to-purple-900",
       gradient: "from-pink-400 to-purple-500",
-      color: "#f472b6"
+      color: "#f472b6",
     },
     Physical: {
       bg: "bg-gradient-to-br from-green-400 via-green-600 to-emerald-900",
       gradient: "from-green-400 to-emerald-500",
-      color: "#34d399"
+      color: "#34d399",
     },
     Spiritual: {
       bg: "bg-gradient-to-br from-blue-400 via-blue-700 to-indigo-900",
       gradient: "from-blue-400 to-indigo-500",
-      color: "#60a5fa"
+      color: "#60a5fa",
     },
     Financial: {
       bg: "bg-gradient-to-br from-yellow-300 via-yellow-500 to-yellow-700",
       gradient: "from-yellow-300 to-yellow-500",
-      color: "#facc15"
+      color: "#facc15",
     },
     Relational: {
       bg: "bg-gradient-to-br from-red-400 via-pink-600 to-rose-900",
       gradient: "from-red-400 to-pink-500",
-      color: "#f87171"
+      color: "#f87171",
     },
     Environmental: {
       bg: "bg-gradient-to-br from-yellow-200 via-green-200 to-green-700",
       gradient: "from-yellow-200 to-green-400",
-      color: "#fbbf24"
+      color: "#fbbf24",
     },
     Professional: {
       bg: "bg-gradient-to-br from-indigo-400 via-indigo-700 to-gray-900",
       gradient: "from-indigo-400 to-indigo-700",
-      color: "#6366f1"
+      color: "#6366f1",
     },
     Holistic: {
       bg: "bg-gradient-to-br from-cyan-400 via-cyan-700 to-blue-900",
       gradient: "from-cyan-400 to-blue-500",
-      color: "#06b6d4"
+      color: "#06b6d4",
     },
     Integration: {
       bg: "bg-gradient-to-br from-lime-300 via-lime-500 to-green-900",
       gradient: "from-lime-300 to-green-500",
-      color: "#a3e635"
+      color: "#a3e635",
     },
     Consciousness: {
       bg: "bg-gradient-to-br from-violet-400 via-violet-700 to-indigo-900",
       gradient: "from-violet-400 to-indigo-500",
-      color: "#818cf8"
+      color: "#818cf8",
     },
     Resonance: {
       bg: "bg-gradient-to-br from-rose-400 via-pink-700 to-purple-900",
       gradient: "from-rose-400 to-pink-500",
-      color: "#fb7185"
-    }
+      color: "#fb7185",
+    },
   };
 
   const dominant = insightData?.dominant
-    ? insightData.dominant.charAt(0).toUpperCase() + insightData.dominant.slice(1)
+    ? insightData.dominant.charAt(0).toUpperCase() +
+      insightData.dominant.slice(1)
     : null;
-  const themeObj = dominant && CATEGORY_THEME[dominant] ? CATEGORY_THEME[dominant] : {
-    bg: "bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900",
-    gradient: "from-purple-400 to-indigo-500",
-    color: "#7c3aed"
-  };
+  const themeObj =
+    dominant && CATEGORY_THEME[dominant]
+      ? CATEGORY_THEME[dominant]
+      : {
+          bg: "bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900",
+          gradient: "from-purple-400 to-indigo-500",
+          color: "#7c3aed",
+        };
   const themeColor = themeObj.color;
   const themeGradient = themeObj.gradient;
   const themeBg = themeObj.bg;
 
   const openEmailClient = () => {
-    const subject = encodeURIComponent('Send Me My Conscious Prompting Playbook');
+    const subject = encodeURIComponent(
+      "Send Me My Conscious Prompting Playbook"
+    );
     const body = encodeURIComponent(
-      'Dear Brooks:\n\nI just completed the HOLO ATTUNER and now I\'d like to know how to use this attunement to dramatically increase my AI NINJA POWER.\n\n'
+      "Dear Brooks:\n\nI just completed the HOLO ATTUNER and now I'd like to know how to use this attunement to dramatically increase my AI NINJA POWER.\n\n"
     );
     window.location.href = `mailto:brooks@teamholo.com?subject=${subject}&body=${body}`;
   };
@@ -229,13 +272,17 @@ export default function ResultsPage() {
           <div className="text-center mb-8 sm:mb-12">
             <div className="inline-block p-1 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full mb-4 sm:mb-6">
               <div className="bg-purple-900 rounded-full px-4 py-2 sm:px-6">
-                <span className="text-xs sm:text-sm font-medium">Your Consciousness Profile</span>
+                <span className="text-xs sm:text-sm font-medium">
+                  Your Consciousness Profile
+                </span>
               </div>
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 px-4">
               <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                {insightData.dominant.charAt(0).toUpperCase() + insightData.dominant.slice(1)} Attunement
+                {insightData.dominant.charAt(0).toUpperCase() +
+                  insightData.dominant.slice(1)}{" "}
+                Attunement
               </span>
             </h1>
 
@@ -251,69 +298,76 @@ export default function ResultsPage() {
                 scores={scores}
                 highlightDominant
                 exportRef={chartExportRef}
+                useBackgroundImage={true}
+                backgroundImage="/assets/rainbow-bg.svg" // Rainbow spiral pattern background
               />
               <div className="w-full mt-8">
-                <HarmonyInsight
-                  {...insightData}
-                  theme={themeGradient}
-                />
+                <HarmonyInsight {...insightData} theme={themeGradient} />
               </div>
               {/* Email summary form */}
               <div className="w-full mt-8 flex flex-col items-center">
-                <h3 className="text-lg font-semibold mb-2">Email Me My Results</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  Email Me My Results
+                </h3>
                 <div className="flex flex-col sm:flex-row gap-2 w-full max-w-md">
                   <input
                     type="email"
                     className="flex-1 px-4 py-2 rounded-lg border border-gray-300 text-black"
                     placeholder="Enter your email"
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     disabled={sending}
                   />
                   <Button
                     onClick={async () => {
                       setSending(true);
-                      setEmailStatus('idle');
-                      setEmailMsg('');
+                      setEmailStatus("idle");
+                      setEmailMsg("");
                       try {
                         // Get chart image as data URL
-                        let chartImg = '';
+                        let chartImg = "";
                         if (chartExportRef.current) {
-                          chartImg = chartExportRef.current.toDataURL('image/png');
+                          chartImg =
+                            chartExportRef.current.toDataURL("image/png");
                         }
                         // Prepare email params
                         const params = {
                           to_email: email,
                           dominant: insightData.dominant,
-                          weakest: insightData.weakest || '',
+                          weakest: insightData.weakest || "",
                           insight: insightData.insight,
                           chart_image: chartImg,
                           theme: insightData.theme,
-                          overall_average: insightData.overall_average
+                          overall_average: insightData.overall_average,
                         };
                         // TODO: Replace with your EmailJS service/template/user IDs
-                        const serviceId = 'YOUR_SERVICE_ID';
-                        const templateId = 'YOUR_TEMPLATE_ID';
-                        const userId = 'YOUR_USER_ID';
-                        await emailjs.send(serviceId, templateId, params, userId);
-                        setEmailStatus('success');
-                        setEmailMsg('Summary sent! Check your inbox.');
+                        const serviceId = "YOUR_SERVICE_ID";
+                        const templateId = "YOUR_TEMPLATE_ID";
+                        const userId = "YOUR_USER_ID";
+                        await emailjs.send(
+                          serviceId,
+                          templateId,
+                          params,
+                          userId
+                        );
+                        setEmailStatus("success");
+                        setEmailMsg("Summary sent! Check your inbox.");
                       } catch {
-                        setEmailStatus('error');
-                        setEmailMsg('Failed to send email. Please try again.');
+                        setEmailStatus("error");
+                        setEmailMsg("Failed to send email. Please try again.");
                       } finally {
                         setSending(false);
                       }
                     }}
                     disabled={sending || !email}
                   >
-                    {sending ? 'Sending...' : 'Send'}
+                    {sending ? "Sending..." : "Send"}
                   </Button>
                 </div>
-                {emailStatus === 'success' && (
+                {emailStatus === "success" && (
                   <div className="mt-2 text-green-500">{emailMsg}</div>
                 )}
-                {emailStatus === 'error' && (
+                {emailStatus === "error" && (
                   <div className="mt-2 text-red-500">{emailMsg}</div>
                 )}
               </div>
@@ -327,7 +381,10 @@ export default function ResultsPage() {
               disabled={false}
               className="inline-flex items-center "
             >
-              <span className='max-w-[350px] !text-[20px] sm:!text-[30px] relative' style={{ lineHeight: 1.1 }}>
+              <span
+                className="max-w-[350px] !text-[20px] sm:!text-[30px] relative"
+                style={{ lineHeight: 1.1 }}
+              >
                 Get Your Free Wholeness Prompting Playbook
               </span>
             </Button>
