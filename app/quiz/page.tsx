@@ -199,25 +199,30 @@ export default function QuizPage() {
                         <button
                           key={index}
                           onClick={() => handleResponse(value)}
-                          className={`w-full p-4 sm:p-4 rounded-xl border-2 transition-all duration-200 touch-manipulation ${isSelected
-                            ? 'border-cyan-400 bg-cyan-400/10 text-cyan-400'
-                            : 'border-white/20 hover:border-white/40 hover:bg-white/5 active:bg-white/10'
-                            }`}
+                          className={`w-full px-5 py-4 sm:px-7 sm:py-5 rounded-2xl border-2 font-semibold text-base sm:text-lg flex items-center justify-between gap-4 transition-all duration-200 touch-manipulation
+                            ${isSelected
+                              ? 'border-cyan-400 bg-gradient-to-r from-cyan-400/30 via-cyan-400/10 to-purple-400/20 text-cyan-300 shadow-[0_0_0_3px_rgba(34,211,238,0.15)] ring-2 ring-cyan-400/30'
+                              : 'border-white/20 bg-white/5 text-white hover:border-cyan-300 hover:bg-cyan-400/10 hover:text-cyan-200 active:bg-cyan-400/20 active:text-cyan-100'
+                            }
+                            group
+                          `}
+                          style={{
+                            boxShadow: isSelected
+                              ? '0 0 0 4px rgba(34,211,238,0.18), 0 2px 16px 0 rgba(34,211,238,0.10)'
+                              : undefined
+                          }}
                         >
-                          <div className="flex items-center justify-between">
-                            <span className="text-left text-sm sm:text-base font-medium">{label}</span>
-                            <div className="flex items-center space-x-2">
-                              <span className="text-xs sm:text-sm text-gray-400 font-medium">{value}</span>
-                              <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 ${isSelected
-                                ? 'border-cyan-400 bg-cyan-400'
-                                : 'border-white/40'
-                                }`}>
-                                {isSelected && (
-                                  <div className="w-full h-full flex items-center justify-center">
-                                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-black rounded-full"></div>
-                                  </div>
-                                )}
-                              </div>
+                          <span className="text-left flex-1 text-base sm:text-lg font-medium">{label}</span>
+                          <div className="flex items-center space-x-3">
+                            <span className="text-xs sm:text-base text-gray-300 font-bold min-w-[2ch] text-right">{value}</span>
+                            <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200
+                              ${isSelected
+                                ? 'border-cyan-400 bg-cyan-400/80 shadow-[0_0_8px_2px_rgba(34,211,238,0.25)]'
+                                : 'border-white/40 bg-white/10 group-hover:border-cyan-300 group-hover:bg-cyan-400/20'
+                              }`}>
+                              {isSelected && (
+                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-black rounded-full"></div>
+                              )}
                             </div>
                           </div>
                         </button>
