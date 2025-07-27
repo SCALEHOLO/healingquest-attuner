@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true);
 
   // DEV ONLY: Bypass auth on localhost for debugging
+  /*
   useEffect(() => {
     if (typeof window !== "undefined" && window.location.hostname === "localhost") {
       const mockUser = {
@@ -51,12 +52,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setLoading(false);
     }
   }, []);
+  */
 
   useEffect(() => {
     // Only run Firebase auth logic if not on localhost (dev bypass)
+    /*
     if (typeof window !== "undefined" && window.location.hostname === "localhost") {
       return;
     }
+      */
 
     // Handle redirect result for mobile browsers
     const handleRedirectResult = async () => {
