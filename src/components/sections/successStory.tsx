@@ -17,7 +17,70 @@ const SuccessStory = () => {
 
     return (
         <>
-            <section className="screen-dynamic bg-black text-white  overflow-hidden relative p-[2rem]  md:px-[6rem] md:py-[4rem] ">
+            <style jsx global>{`
+                @media (max-width: 768px) {
+                    .ladies-image {
+                            max-width: 100%;
+                    /* Optional base styles here if needed */
+                    }
+                }
+
+                @media (min-width: 768px) {
+                    /* Tailwind lg: breakpoint = 1024px */
+                    .ladies-image {
+                        width: 360px;
+                    }
+                }
+
+                @media (min-width: 847px) {
+                    /* Tailwind lg: breakpoint = 1024px */
+                    .ladies-image {
+                        width: 400px;
+                    }
+                }
+                @media (min-width: 909px) {
+                    /* Tailwind lg: breakpoint = 1024px */
+                    .ladies-image {
+                        width: 440px;
+                    }
+                }
+
+                @media (min-width: 1025px) {
+                    /* Tailwind lg: breakpoint = 1024px */
+                    .ladies-image {
+                        width: 480px;
+                    }
+                }
+
+                @media (min-width: 1059px) {
+                    /* Tailwind lg: breakpoint = 1024px */
+                    .ladies-image {
+                        width: 509px;
+                    }
+                }
+
+                @media (min-width: 1159px) {
+                    /* Tailwind lg: breakpoint = 1024px */
+                    .ladies-image {
+                        width: 559px;
+                    }
+                }
+
+                @media (min-width: 1240px) {
+                    /* Tailwind lg: breakpoint = 1024px */
+                    .ladies-image {
+                        width: 639px;
+                    }
+                }
+
+                @media (min-width: 1480px) {
+                    /* Tailwind lg: breakpoint = 1024px */
+                    .ladies-image {
+                        width: 698px;
+                    }
+                }
+            `}</style>
+            <section className="screen-dynamic bg-black text-white  overflow-hidden relative p-[2rem]  md:px-[6rem] md:pt-[4rem] md:pb-[6rem] ">
                 {/* Background Image - Optimized for mobile and desktop */}
                 <div className="absolute inset-0 ">
                     <video
@@ -74,7 +137,7 @@ const SuccessStory = () => {
 
                                     </p>
                                 </div>
-                                <div className='flex flex-col md:flex-row max-md:gap-6 justify-between p-[1rem]'>
+                                <div className='flex flex-row max-md:gap-6 justify-between p-[1rem]'>
                                     <div>
                                         <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-center tracking-tight leading-tight" style={{ textShadow: '4px 4px 8px rgba(0,0,0,0.7)' }}>
                                             30
@@ -113,26 +176,28 @@ const SuccessStory = () => {
                                 </div>
 
                             </div>
-                            <div className="  w-full h-full bg-contain bg-no-repeat bg-center md:absolute  md:right-0 md:h-[91%] lg:h-full " >
+                            <div className="  w-full h-full bg-contain bg-no-repeat bg-center md:absolute  md:right-0 md:h-[91%] lg:h-full overflow-visible" >
                                 <div className="relative overflow-visible">
-                                    <Image
-                                        src="/healingQuest/JUDY__MICHELLE.webp"
-                                        alt="Center Logo"
-                                        width={580}
-                                        height={384.25}
-                                        className="w-full md:translate-y-[-5px] md:h-[404.25px] md:w-[900px]"
-                                        loading="eager"
-                                        sizes="(min-width: 768px) 900px, 100vw"
-                                    />
-                                    <Image
-                                        src="/healingQuest/signal-2025-07-26-112011.jpeg"
-                                        alt="Center Logo"
-                                        width={444}
-                                        height={224}
-                                        className="absolute z-[10] right-[-10px] md:right-[0px] bottom-[0px] md:bottom-[5px] h-[3.5rem]  w-[7rem] md:h-[4.5rem]   lg:h-[7rem]  lg:w-[14rem] md:mr-[-0rem] "
-                                        loading="eager"
-                                        sizes=""
-                                    />
+                                    <div className="relative w-fit h-fit">
+                                        <Image
+                                            src="/healingQuest/JUDY__MICHELLE.webp"
+                                            alt="Center Logo"
+                                            width={1607}
+                                            height={1065}
+                                            className="ladies-image  md:translate-y-[-0px] max-w-none h-auto"
+                                            loading="eager"
+                                            sizes="(min-width: 768px) 900px, 100vw"
+                                        />
+                                        <Image
+                                            src="/healingQuest/signal-2025-07-26-112011.jpeg"
+                                            alt="Center Logo"
+                                            width={224}
+                                            height={112}
+                                            className="absolute z-[10] right-0  bottom-0 h-[3.5rem]  w-[7rem] md:h-[4.5rem]   lg:h-[7rem]  lg:w-[14rem]"
+                                            loading="eager"
+                                            sizes=""
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
