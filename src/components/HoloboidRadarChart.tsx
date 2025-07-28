@@ -68,11 +68,18 @@ const CATEGORY_COLORS: { [K in AttunementDimension]: string } = {
   Resonance: "#d17bb0", // soft rose
 };
 
-const RADAR_SIZE = 400;
-const CENTER = RADAR_SIZE / 2;
-const RADIUS = 100; // Much smaller radius to fit perfectly within background spiral
-const LEVELS = 5; // Re-enabled for Mandala grid design
-const TICK_VALUES = [0, 2, 4, 6, 8, 10]; // Re-enabled for tick labels
+// Responsive sizing
+const getChartSize = () => {
+  if (typeof window === "undefined") return 400;
+  const width = window.innerWidth;
+  if (width < 640) return 280; // Mobile
+  if (width < 1024) return 350; // Tablet
+  return 400; // Desktop
+};
+
+const getRadius = (chartSize: number) => chartSize * 0.35; // 25% of chart size
+const getLevels = () => 5;
+const TICK_VALUES = [0, 2, 4, 6, 8, 10];
 
 function isValidScores(scores: unknown): scores is AttunementScores12 {
   if (!scores || typeof scores !== "object") return false;
@@ -90,9 +97,18 @@ function isValidScores(scores: unknown): scores is AttunementScores12 {
   return true;
 }
 
-function getPointsForLevel(level: number, scores?: AttunementScores12) {
+function getPointsForLevel(
+  level: number,
+  scores?: AttunementScores12,
+  chartSize?: number
+) {
   // If scores provided, use them for the data polygon
   // Otherwise, draw a regular polygon for grid
+  const RADAR_SIZE = chartSize || 400;
+  const CENTER = RADAR_SIZE / 2;
+  const RADIUS = getRadius(RADAR_SIZE);
+  const LEVELS = getLevels();
+
   const angleStep = (2 * Math.PI) / DIMENSIONS.length;
   return DIMENSIONS.map((dim, i) => {
     const angle = -Math.PI / 2 + i * angleStep;
@@ -125,6 +141,18 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
   backgroundImage,
   useBackgroundImage = false,
 }) => {
+  const [chartSize, setChartSize] = React.useState(400);
+
+  React.useEffect(() => {
+    const updateSize = () => {
+      setChartSize(getChartSize());
+    };
+
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
   if (!isValidScores(scores)) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[300px] bg-red-100 dark:bg-red-900 rounded-lg p-6">
@@ -136,30 +164,34 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
   }
 
   const dominant = getDominantCategory(scores);
+  const CENTER = chartSize / 2;
+  const RADIUS = getRadius(chartSize);
+  const LEVELS = getLevels();
 
   // SVG layers: background image OR colored zones, grid, ticks, labels, data polygon
   return (
     <div
       className={clsx(
         "flex flex-col items-center justify-center w-full",
-        "max-w-xl mx-auto p-4 sm:p-6 lg:p-8",
+        "max-w-xl mx-auto p-2 sm:p-4 lg:p-6",
         "relative"
       )}
-      style={{
-        background: "#000000", // Black background to match first image exactly
-        backgroundImage:
-          useBackgroundImage && backgroundImage
-            ? `url(${backgroundImage})`
-            : "none",
-        backgroundSize: "contain",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
+
+    // style={{
+    //   // background: "#0003", // Black background to match first image exactly
+    //   // backgroundImage:
+    //   //   useBackgroundImage && backgroundImage
+    //   //     ? `url(${backgroundImage})`
+    //   //     : "none",
+    //   backgroundSize: "contain",
+    //   backgroundPosition: "center",
+    //   backgroundRepeat: "no-repeat",
+    // }}
     >
       <svg
-        width={RADAR_SIZE}
-        height={RADAR_SIZE}
-        viewBox={`0 0 ${RADAR_SIZE} ${RADAR_SIZE}`}
+        width={chartSize}
+        height={chartSize}
+        viewBox={`0 -12 ${chartSize} ${chartSize}`}
         style={{ display: "block", margin: "0 auto", background: "none" }}
         ref={exportRef as React.RefObject<SVGSVGElement> | undefined}
       >
@@ -170,13 +202,13 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
             <pattern
               id="backgroundPattern"
               patternUnits="userSpaceOnUse"
-              width={RADAR_SIZE}
-              height={RADAR_SIZE}
+              width={chartSize}
+              height={chartSize}
             >
               <image
                 href={backgroundImage}
-                width={RADAR_SIZE}
-                height={RADAR_SIZE}
+                width={chartSize}
+                height={chartSize}
                 preserveAspectRatio="xMidYMid slice"
               />
             </pattern>
@@ -234,7 +266,7 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
         {/* Concentric polygon grid - integrated Mandala design */}
         {[...Array(LEVELS + 1)].map((_, level) => {
           if (level === 0) return null;
-          const points = getPointsForLevel(level);
+          const points = getPointsForLevel(level, undefined, chartSize);
           const d =
             points
               .map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`)
@@ -301,9 +333,9 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
               x={CENTER}
               y={CENTER - yOffset + 3}
               textAnchor="middle"
-              fontSize={9}
+              fontSize={chartSize < 350 ? 8 : 9}
               fill="#fff"
-              opacity={0.6}
+              opacity={0.9}
               fontWeight={500}
               style={{
                 userSelect: "none",
@@ -341,7 +373,7 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
               {CATEGORY_LABELS[dim]}
             </text>
           );
-        })} 
+        })} */}
 
         {/* Data polygon - integrated Mandala design */}
         {(() => {
@@ -368,7 +400,7 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
               d={d}
               fill="none"
               stroke="#fff"
-              strokeWidth={2} // Harmonious stroke width for smaller radar
+              strokeWidth={chartSize < 350 ? 1.5 : 2} // Harmonious stroke width for smaller radar
               style={{
                 filter: "drop-shadow(0 0 4px rgba(255,255,255,0.4))",
                 mixBlendMode: "lighten",
@@ -398,7 +430,7 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
               key={i}
               cx={p.x}
               cy={p.y}
-              r={2.5} // Harmonious radius for smaller radar
+              r={chartSize < 350 ? 2 : 2.5} // Harmonious radius for smaller radar
               fill="#fff"
               stroke={CATEGORY_COLORS[DIMENSIONS[i]]}
               strokeWidth={1} // Harmonious stroke width for smaller radar
@@ -410,7 +442,7 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
           ));
         })()}
       </svg>
-      <div className="mt-4 text-sm text-gray-200 text-center">
+      {/* <div className="mt-2 sm:mt-4 text-xs sm:text-sm text-gray-200 text-center">
         <span>
           Dominant:{" "}
           <span
@@ -420,7 +452,7 @@ export const HoloboidRadarChart: React.FC<HoloboidRadarChartProps> = ({
             {CATEGORY_LABELS[dominant]}
           </span>
         </span>
-      </div>
+      </div> */}
     </div>
   );
 };
