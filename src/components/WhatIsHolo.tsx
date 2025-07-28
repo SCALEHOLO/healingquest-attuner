@@ -26,33 +26,120 @@ const WhatIsHolo = () => {
         <div className='bg-[#2c2b72] px-[20px] py-[57px]  md:px-[50px] md:py-[20px] md:pt-[6rem] lg:pt-[4rem]  rounded-[25px]'>
           {/* Title */}
           <div className="text-center mb-8 sm:mb-12 lg:mb-5 lg:mt-5">
-            <div className="inline-flex items-center justify-center px-2">
-              {/* Combined Title Line */}
-              <div className="flex items-center justify-center flex-nowrap    text-white ">
-                <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold whitespace-nowrap mr-[-2rem]">
-                  What is
-                </h2>
+            <div className="flex items-center justify-center w-full max-w-screen-xl mx-auto whitespace-nowrap">
+              {/* Left item */}
+              <div className="flex-1 text-right min-w-[150px]">
+                <div className="dynamic-margin-left-column">
+                  <h2 className="font-sans text-6xl sm:text-7xl md:text-8xl lg:text-8xl sm:tracking-tight font-bold text-white whitespace-nowrap mr-[-4rem]">
+                    What is
+                  </h2>
+                </div>
+              </div>
+
+              {/* Center image (no gap, protected from shrinking) */}
+              <div className="flex-shrink-0">
                 <Image
                   src="/healingQuest/whatISholoLogo.png"
                   alt="HOLO ATTUNER"
                   width={300}
                   height={300}
-                  className="mt-[-8rem] max-md:ml-[1rem] md:mt-[-11rem] "
+                  className="inline-block mt-[-8rem] md:mt-[-11rem]"
                   loading="lazy"
                   sizes="(max-width: 640px) 120px, (max-width: 768px) 240px, 300px"
                 />
-                <Image
-                  src="/healingQuest/ATTUNER.png"
-                  alt="ATTUNER"
-                  width={300}
-                  height={300}
-                  className=" ml-[-1rem] "
-                  loading="lazy"
-                  sizes="(max-width: 640px) 160px, (max-width: 768px) 240px, 300px"
-                />
               </div>
+
+              {/* Right item */}
+              <div className="flex-1 text-left min-w-[150px]">
+                <div className="dynamic-margin-right-column">
+                  <Image
+                    src="/healingQuest/ATTUNER.png"
+                    alt="ATTUNER"
+                    width={900}
+                    height={500}
+                    className="inline-block"
+                    loading="lazy"
+                    sizes="(max-width: 640px) 160px, (max-width: 768px) 240px, 360px"
+                  />
+                </div>
+              </div>
+              <style jsx>{`
+                .dynamic-margin-right-column {
+                }
+
+                @media (max-width: 768px) {
+                  .dynamic-margin-left-column {
+                    margin-bottom: -40px;
+                    margin-left: -15px;
+                  }
+                }
+
+                @media (max-width: 739px) {
+                  .dynamic-margin-left-column {
+                    margin-bottom: -40px;
+                    margin-left: -25px;
+                  }
+                }
+
+                @media (max-width: 733px) {
+                  .dynamic-margin-left-column {
+                    margin-bottom: -40px;
+                    margin-left: -50px;
+                  }
+                }
+
+                @media (max-width: 638px) {
+                  .dynamic-margin-left-column {
+                    margin-bottom: -40px;
+                    margin-left: -15px;
+                  }
+                }
+
+                @media (max-width: 598px) {
+                  .dynamic-margin-left-column {
+                    margin-bottom: -40px;
+                    margin-left: -16px;
+                  }
+                }
+
+
+                @media (min-width: 768px) {
+                  .dynamic-margin-left-column {
+                    margin-bottom: 7px !important;
+                    margin-left: -130px !important;
+                  }
+                }
+
+                @media (min-width: 802px) {
+                  .dynamic-margin-left-column {
+                    margin-bottom: 10px !important;
+                    margin-right: -10px !important;
+                  }
+                }
+
+                @media (min-width: 1054px) {
+                  .dynamic-margin-left-column {
+                    margin-bottom: 10px !important;
+                    margin-right: -5px !important;
+                  }
+                }
+
+                @media (max-width: 768px) {
+                  .dynamic-margin-right-column {
+                    margin-bottom: -50px !important;
+                    margin-left: -70px !important;
+                  }
+                }
+                @media (min-width: 768px) {
+                  .dynamic-margin-right-column {
+                    margin-bottom: -7px !important;
+                    margin-left: -60px !important;
+                  }
+                }
+              `}</style>
             </div>
           </div>
+
 
           {/* Main Content - Side by Side */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center mb-8 sm:mb-12 lg:mb-16">
