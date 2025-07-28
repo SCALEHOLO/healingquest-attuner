@@ -153,7 +153,7 @@ const WhatIsHolo = () => {
 
               <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
                 <span className="font-bold text-white">HOLO HEALINGQUEST ATTUNER™</span>
-                maps your unique wholeness signature across eight sacred dimensions:
+                &nbsp;maps your unique wholeness signature across eight sacred dimensions:
               </p>
               {/* Dimensions List */}
               <div className="text-white">

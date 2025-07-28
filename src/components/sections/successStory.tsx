@@ -126,15 +126,14 @@ const SuccessStory = () => {
                                 sizes=""
                             />
                             <p>
-                                <strong className='text-[#ffde59]'> Healing Quest</strong> Television, Radio and Podcasts deliver ancient wisdom & cutting edge technology for Mind, Body and Soul. Including Plant Medicine,Energy Medicine, Herbal Insights,Quantum Healing and Emotional Fitness. Contact Judy Brooks 707 338-8501 for more info.
+                                <strong className='text-[#ffde59]'> Healing Quest</strong> Television, Radio and Podcasts deliver ancient wisdom & cutting edge technology for Mind, Body and Soul. Including Plant Medicine,Energy Medicine, Herbal Insights, Quantum Healing and Emotional Fitness. Contact Judy Brooks 707 338-8501 for more info.
                             </p>
                         </div>
                         <div className='md:w-1/2'>
                             <div className=''>
                                 <div className=' '>
                                     <p>
-                                        <strong className='text-[#ffde59]'> Healing Quest</strong> Healing Quest Healing Quest creators and hosts Judy Brooks and Roy Walkenhorst  have been trusted guides for decades in the world of holistic wellness.
-
+                                        <strong className='text-[#ffde59]'> Healing Quest</strong> creators and hosts Judy Brooks, Roy Walkenhorst and Michele Bernhardt have been trusted guides for decades in the world of holistic wellness.
                                     </p>
                                 </div>
                                 <div className='flex flex-row max-md:gap-6 justify-between p-[1rem]'>
