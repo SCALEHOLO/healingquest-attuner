@@ -191,7 +191,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-[-12px] top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300"
+                  className="absolute right-[-11px] top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300"
                   tabIndex={-1}
                 >
                   {showPassword ? <FiEyeOff /> : <FiEye />}
