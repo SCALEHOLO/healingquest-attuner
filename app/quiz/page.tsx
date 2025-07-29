@@ -22,16 +22,16 @@ export default function QuizPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
-    // try {
-    //   await logout();
-    //   router.push('/');
-    // } catch (error) {
-    //   console.error('Error logging out:', error);
-    // }
+    try {
+      await logout();
+      router.push("/");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   const handleResponse = async (value: number) => {
@@ -359,7 +359,7 @@ export default function QuizPage() {
 
                       <p className="text-gray-300 text-base sm:text-lg mb-4 leading-relaxed">
                         Congratulations! You&apos;ve completed all{" "}
-                        <strong>8 questions</strong> of your consciousness
+                        <strong>12 questions</strong> of your consciousness
                         profile assessment.
                       </p>
 

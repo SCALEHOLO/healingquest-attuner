@@ -7,7 +7,7 @@ const FeatureCard = ({ emoji, title, description }: { emoji: string; title: stri
     <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 sm:mb-2 flex items-center  text-2xl sm:text-3xl lg:text-4xl">
       {emoji}
     </div>
-    <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 uppercase tracking-wider">{title}</h3>
+    <h3 className="text-lg sm:text-2xl font-bold text-white mb-2 sm:mb-3 uppercase tracking-wider">{title}</h3>
     <p className="text-gray-300 text-sm sm:text-base leading-relaxed">{description}</p>
   </div>
 );

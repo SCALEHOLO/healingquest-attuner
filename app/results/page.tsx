@@ -111,12 +111,12 @@ export default function ResultsPage() {
 
   const openEmailClient = () => {
     const subject = encodeURIComponent(
-      "Send Me My Conscious Prompting Playbook"
+      "Send Me My Wholeness Prompting Playbook"
     );
     const body = encodeURIComponent(
-      "Dear Brooks:\n\nI just completed the HOLO ATTUNER and now I'd like to know how to use this attunement to dramatically increase my AI NINJA POWER.\n\n"
+      "Dear Judy:\n\nI just completed the HOLO HEALINGQUEST ATTUNER and now I'd like to know how to use this attunement to dramatically increase my AI NINJA POWER to heal every aspect of my life.\n\n"
     );
-    window.location.href = `mailto:brooks@teamholo.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:Judy@healingquest.tv?subject=${subject}&body=${body}`;
   };
 
   return (
