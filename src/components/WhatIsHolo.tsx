@@ -47,7 +47,7 @@ const WhatIsHolo = () => {
           */
 
 
-        @media (min-width: 768px) {
+        @media (min-width: 769px) {
           .dynamic-margin-left-column {
             margin-bottom: 7px !important;
             margin-left: -130px !important;
@@ -78,7 +78,7 @@ const WhatIsHolo = () => {
 
         */
 
-        @media (min-width: 768px) {
+        @media (min-width: 769px) {
           .dynamic-margin-right-column {
             margin-bottom: -7px !important;
             margin-left: -60px !important;
@@ -91,6 +91,9 @@ const WhatIsHolo = () => {
             margin-bottom: 10px;
             margin-top: -30px;
 
+          }
+          .dynamic-margin-left-column h2 {
+            margin-right:0px !important;
           }
 
           .dynamic-margin-left-column h2 {
