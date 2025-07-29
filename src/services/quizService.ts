@@ -1,7 +1,6 @@
 import { doc, setDoc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { quizQuestions } from '@/data/quizQuestions';
-import { UserQuizData, QuizResponse } from '@/types/quiz';
+import { UserQuizData, QuizResponse, quizQuestions } from '@/data/quizQuestions';
 
 export interface QuizSubmission {
   responses: { [questionId: string]: number };
@@ -12,30 +11,46 @@ export interface QuizSubmission {
 
 export const calculateScores = (responses: { [questionId: string]: number }) => {
   const categoryScores = {
+    mental: 0,
+    emotional: 0,
+    professional: 0,
+    physical: 0,
+    spiritual: 0,
+    financial: 0,
+    relational: 0,
+    environmental: 0,
     holistic: 0,
-    integration: 0,
+    Integration: 0,
     consciousness: 0,
-    resonance: 0
+    resonance: 0,
   };
 
   const categoryCounts = {
+    mental: 0,
+    emotional: 0,
+    professional: 0,
+    physical: 0,
+    spiritual: 0,
+    financial: 0,
+    relational: 0,
+    environmental: 0,
     holistic: 0,
-    integration: 0,
+    Integration: 0,
     consciousness: 0,
-    resonance: 0
+    resonance: 0,
   };
 
   // Calculate average scores per category
   Object.entries(responses).forEach(([questionId, value]) => {
     const question = quizQuestions.find(q => q.id === questionId);
     if (question) {
-      const category = question.dimension as keyof typeof categoryScores;
+      const category = question.category as keyof typeof categoryScores;
       categoryScores[category] += value;
       categoryCounts[category]++;
     }
   });
 
-  // Convert to averages (1-5 scale)
+  // // Convert to averages (1-5 scale)
   Object.keys(categoryScores).forEach(category => {
     const cat = category as keyof typeof categoryScores;
     if (categoryCounts[cat] > 0) {
@@ -49,24 +64,24 @@ export const calculateScores = (responses: { [questionId: string]: number }) => 
 export const saveIndividualResponse = async (userId: string, email: string, questionId: string, value: number): Promise<void> => {
   try {
     console.log('💾 Saving individual response:', { userId, questionId, value });
-
+    
     // Save individual response to a sub-collection
     await addDoc(collection(db, 'quizResults', userId, 'responses'), {
       questionId,
       value,
       timestamp: serverTimestamp()
     });
-
+    
     // Also update the user's basic info
     await setDoc(doc(db, 'quizResults', userId), {
       userId,
       email,
       lastUpdated: serverTimestamp()
     }, { merge: true });
-
-    console.log('Individual response saved successfully');
+    
+    console.log('✅ Individual response saved successfully');
   } catch (error) {
-    console.error('Error saving individual response:', error);
+    console.error('❌ Error saving individual response:', error);
     // Don't throw error to avoid disrupting quiz flow
   }
 };
@@ -74,16 +89,16 @@ export const saveIndividualResponse = async (userId: string, email: string, ques
 export const saveQuizResults = async (submission: QuizSubmission): Promise<void> => {
   try {
     const { responses, email, userId, userExperience } = submission;
-
-    console.log('QUIZ SERVICE: Starting to save quiz results...');
-    console.log('Email:', email);
-    console.log('User ID:', userId);
-    console.log('Raw responses:', responses);
-
+    
+    console.log('🔥 QUIZ SERVICE: Starting to save quiz results...');
+    console.log('📧 Email:', email);
+    console.log('🆔 User ID:', userId);
+    console.log('📝 Raw responses:', responses);
+    
     // Calculate scores
     const scores = calculateScores(responses);
-    console.log('Calculated scores:', scores);
-
+    console.log('📊 Calculated scores:', scores);
+    
     // Convert responses to QuizResponse format
     const quizResponses: QuizResponse[] = Object.entries(responses).map(([questionId, value]) => ({
       questionId,
@@ -100,18 +115,18 @@ export const saveQuizResults = async (submission: QuizSubmission): Promise<void>
       completedAt: new Date(),
       scores
     };
-    console.log('User quiz data to save:', userQuizData);
+    console.log('📦 User quiz data to save:', userQuizData);
 
     // Save to Firestore under user's UID
     const docRef = doc(db, 'quizResults', userId);
     console.log('📄 Saving to document path: quizResults/' + userId);
-
+    
     await setDoc(docRef, {
       ...userQuizData,
       completedAt: serverTimestamp(),
       responses: quizResponses // Don't use serverTimestamp() inside arrays
     });
-    console.log('Successfully saved to quizResults collection');
+    console.log('✅ Successfully saved to quizResults collection');
 
     // Also save to leads collection for marketing
     const leadData = {
@@ -122,14 +137,14 @@ export const saveQuizResults = async (submission: QuizSubmission): Promise<void>
       completedAt: serverTimestamp(),
       source: 'quiz'
     };
-    console.log('Saving lead data:', leadData);
-
+    console.log('📈 Saving lead data:', leadData);
+    
     await addDoc(collection(db, 'leads'), leadData);
-    console.log('Successfully saved to leads collection');
+    console.log('✅ Successfully saved to leads collection');
 
-    console.log('Quiz results saved successfully to both collections!');
+    console.log('🎉 Quiz results saved successfully to both collections!');
   } catch (error) {
-    console.error('Error saving quiz results:', error);
+    console.error('❌ Error saving quiz results:', error);
     throw error;
   }
 };
@@ -138,7 +153,7 @@ export const getUserQuizResults = async (userId: string): Promise<UserQuizData |
   try {
     const docRef = doc(db, 'quizResults', userId);
     const docSnap = await getDoc(docRef);
-
+    
     if (docSnap.exists()) {
       return docSnap.data() as UserQuizData;
     } else {
@@ -151,7 +166,7 @@ export const getUserQuizResults = async (userId: string): Promise<UserQuizData |
 };
 
 export const getPersonalizedInsight = (scores: UserQuizData['scores']): string => {
-  const dominantCategory = Object.entries(scores).reduce((a, b) =>
+  const dominantCategory = Object.entries(scores).reduce((a, b) => 
     scores[a[0] as keyof typeof scores] > scores[b[0] as keyof typeof scores] ? a : b
   )[0];
 
@@ -163,4 +178,4 @@ export const getPersonalizedInsight = (scores: UserQuizData['scores']): string =
   };
 
   return insights[dominantCategory as keyof typeof insights] || insights.holistic;
-};
+}; 

@@ -2,18 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { getUserQuizResults } from '@/services/quizService';
-import { UserQuizData, QuizResponse } from '@/types/quiz';
+import { getUserQuizResults, getPersonalizedInsight } from '@/services/quizService';
+import { UserQuizData, categoryDescriptions } from '@/data/quizQuestions';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import Link from 'next/link';
-import Button from '@/components/Button';
 import Image from 'next/image';
-import { calculateScores } from '@/services/calculateScores';
-import { analyzeHarmony } from '@/services/HarmonyEngine';
-import HoloboidRadarChart from '@/components/HoloboidRadarChart';
-import HarmonyInsight from '@/components/HarmonyInsight';
-import { useRef } from 'react';
-import emailjs from 'emailjs-com';
+import Button from '@/components/Button';
 export default function ResultsPage() {
   const [quizData, setQuizData] = useState<UserQuizData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,9 +35,9 @@ export default function ResultsPage() {
         } else {
           setError('No quiz results found. Please take the assessment first.');
         }
-      } catch {
+      } catch (err) {
         setError('Failed to load your results. Please try again.');
-        // Optionally keep the console.error if desired
+        console.error('Error fetching results:', err);
       } finally {
         setLoading(false);
       }
@@ -51,13 +45,6 @@ export default function ResultsPage() {
 
     fetchResults();
   }, [user]);
-
-  // Email summary state (move all hooks to top level)
-  const [email, setEmail] = useState('');
-  const [sending, setSending] = useState(false);
-  const [emailStatus, setEmailStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [emailMsg, setEmailMsg] = useState('');
-  const chartExportRef = useRef<HTMLCanvasElement>(null);
 
   if (loading) {
     return (
@@ -90,101 +77,28 @@ export default function ResultsPage() {
     );
   }
 
-  // Transform responses array to { [questionId]: number }
-  const responseMap: { [questionId: string]: number } = {};
-  quizData.responses.forEach((r: QuizResponse) => {
-    responseMap[r.questionId] = r.value;
-  });
+  const { scores } = quizData;
+  const insight = getPersonalizedInsight(scores);
+  const dominantCategory = Object.entries(scores).reduce((a, b) =>
+    scores[a[0] as keyof typeof scores] > scores[b[0] as keyof typeof scores] ? a : b
+  )[0];
 
-  const scores = calculateScores(responseMap);
-  const insightData = analyzeHarmony(scores);
-
-  // Dynamic theming: map dominant category to Tailwind/hex color and gradient
-  const CATEGORY_THEME: Record<string, { bg: string; gradient: string; color: string }> = {
-    Mental: {
-      bg: "bg-gradient-to-br from-purple-900 via-violet-800 to-indigo-900",
-      gradient: "from-purple-400 to-indigo-500",
-      color: "#7c3aed"
-    },
-    Emotional: {
-      bg: "bg-gradient-to-br from-pink-500 via-pink-700 to-purple-900",
-      gradient: "from-pink-400 to-purple-500",
-      color: "#f472b6"
-    },
-    Physical: {
-      bg: "bg-gradient-to-br from-green-400 via-green-600 to-emerald-900",
-      gradient: "from-green-400 to-emerald-500",
-      color: "#34d399"
-    },
-    Spiritual: {
-      bg: "bg-gradient-to-br from-blue-400 via-blue-700 to-indigo-900",
-      gradient: "from-blue-400 to-indigo-500",
-      color: "#60a5fa"
-    },
-    Financial: {
-      bg: "bg-gradient-to-br from-yellow-300 via-yellow-500 to-yellow-700",
-      gradient: "from-yellow-300 to-yellow-500",
-      color: "#facc15"
-    },
-    Relational: {
-      bg: "bg-gradient-to-br from-red-400 via-pink-600 to-rose-900",
-      gradient: "from-red-400 to-pink-500",
-      color: "#f87171"
-    },
-    Environmental: {
-      bg: "bg-gradient-to-br from-yellow-200 via-green-200 to-green-700",
-      gradient: "from-yellow-200 to-green-400",
-      color: "#fbbf24"
-    },
-    Professional: {
-      bg: "bg-gradient-to-br from-indigo-400 via-indigo-700 to-gray-900",
-      gradient: "from-indigo-400 to-indigo-700",
-      color: "#6366f1"
-    },
-    Holistic: {
-      bg: "bg-gradient-to-br from-cyan-400 via-cyan-700 to-blue-900",
-      gradient: "from-cyan-400 to-blue-500",
-      color: "#06b6d4"
-    },
-    Integration: {
-      bg: "bg-gradient-to-br from-lime-300 via-lime-500 to-green-900",
-      gradient: "from-lime-300 to-green-500",
-      color: "#a3e635"
-    },
-    Consciousness: {
-      bg: "bg-gradient-to-br from-violet-400 via-violet-700 to-indigo-900",
-      gradient: "from-violet-400 to-indigo-500",
-      color: "#818cf8"
-    },
-    Resonance: {
-      bg: "bg-gradient-to-br from-rose-400 via-pink-700 to-purple-900",
-      gradient: "from-rose-400 to-pink-500",
-      color: "#fb7185"
-    }
+  const categoryColors = {
+    holistic: 'from-cyan-400 to-blue-500',
+    integration: 'from-purple-400 to-pink-500',
+    consciousness: 'from-pink-400 to-red-500',
+    resonance: 'from-yellow-400 to-orange-500'
   };
-
-  const dominant = insightData?.dominant
-    ? insightData.dominant.charAt(0).toUpperCase() + insightData.dominant.slice(1)
-    : null;
-  const themeObj = dominant && CATEGORY_THEME[dominant] ? CATEGORY_THEME[dominant] : {
-    bg: "bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900",
-    gradient: "from-purple-400 to-indigo-500",
-    color: "#7c3aed"
-  };
-  const themeColor = themeObj.color;
-  const themeGradient = themeObj.gradient;
-  const themeBg = themeObj.bg;
-
   const openEmailClient = () => {
-    const subject = encodeURIComponent('Send Me My Wholeness Prompting Playbook');
+    const subject = encodeURIComponent('Send Me My Conscious Prompting Playbook');
     const body = encodeURIComponent(
-      'Dear Judy:\n\nI just completed the HOLO HEALINGQUEST ATTUNER and now I\'d like to know how to use this attunement to dramatically increase my AI NINJA POWER to heal every aspect of my life.\n\n'
+      'Dear Brooks:\n\nI just completed the HOLO ATTUNER and now I\'d like to know how to use this attunement to dramatically increase my AI NINJA POWER.\n\n'
     );
-    window.location.href = `mailto:Judy@healingquest.tv?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:brooks@teamholo.com?subject=${subject}&body=${body}`;
   };
   return (
     <ProtectedRoute>
-      <div className={`min-h-screen ${themeBg} text-white relative`}>
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white">
         {/* Header */}
         <div className="bg-black/20 backdrop-blur-sm border-b border-white/10">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
@@ -212,19 +126,7 @@ export default function ResultsPage() {
         </div>
 
         {/* Results Content */}
-        {/* Optional symbolic overlay */}
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <svg width="100%" height="100%">
-            <defs>
-              <radialGradient id="thematicOverlay" cx="50%" cy="50%" r="80%">
-                <stop offset="0%" stopColor={themeColor} stopOpacity="0.15" />
-                <stop offset="100%" stopColor={themeColor} stopOpacity="0" />
-              </radialGradient>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#thematicOverlay)" />
-          </svg>
-        </div>
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {/* Hero Section */}
           <div className="text-center mb-8 sm:mb-12">
             <div className="inline-block p-1 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full mb-4 sm:mb-6">
@@ -234,102 +136,194 @@ export default function ResultsPage() {
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 px-4">
-              <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                {insightData.dominant.charAt(0).toUpperCase() + insightData.dominant.slice(1)} Attunement
+              <span className={`bg-gradient-to-r ${categoryColors[dominantCategory as keyof typeof categoryColors]} bg-clip-text text-transparent`}>
+                {dominantCategory.charAt(0).toUpperCase() + dominantCategory.slice(1)} Attunement
               </span>
             </h1>
 
             <p className="text-base sm:text-xl text-gray-300 max-w-3xl mx-auto px-4 leading-relaxed mb-8">
-              {insightData.insight}
+              {insight}
             </p>
+
+            {/* Top Logout Button - COMMENTED OUT */}
+            {/*
+            <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-lg p-4 mb-4 border border-orange-500/20 max-w-lg mx-auto">
+              <p className="text-orange-300 text-sm font-medium mb-3">
+                📋 Important: Please log out when finished
+              </p>
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-red-500/20 to-pink-500/20 text-white font-semibold rounded-full text-sm sm:text-base hover:from-red-500/30 hover:to-pink-500/30 transition-all transform hover:scale-105 shadow-lg hover:shadow-red-500/25 border border-red-500/30 hover:border-red-500/50 touch-manipulation"
+              >
+                <svg className="mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Logout & Return to Landing Page
+              </button>
+            </div>
+            */}
           </div>
 
           {/* Visualization */}
           <div className="bg-black/20 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-8 sm:mb-12 border border-white/10">
-            <div className="flex flex-col items-center justify-center">
-              <HoloboidRadarChart
-                scores={scores}
-                highlightDominant
-                exportRef={chartExportRef}
-              />
-              <div className="w-full mt-8">
-                <HarmonyInsight
-                  {...insightData}
-                  theme={themeGradient}
+            {/* <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8">Your HOLO Dimensions</h2> */}
+
+            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
+              {/* Radar Chart Visualization */}
+              <div className="flex flex-col items-center justify-center order-2 lg:order-1">
+                <Image
+                  src="/assets/1.svg"
+                  alt="ATTUNER.ai Logo"
+                  width={32}
+                  height={32}
+                  className="rounded-lg w-[150px] h-[50px] object-cover mb-10"
                 />
-              </div>
-              {/* Email summary form */}
-              <div className="w-full mt-8 flex flex-col items-center">
-                <h3 className="text-lg font-semibold mb-2">Email Me My Results</h3>
-                <div className="flex flex-col sm:flex-row gap-2 w-full max-w-md">
-                  <input
-                    type="email"
-                    className="flex-1 px-4 py-2 rounded-lg border border-gray-300 text-black"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    disabled={sending}
+                <div className="relative w-full h-80  sm:h-80">
+                  {/* <Image
+                      src="/assets/9.svg"
+                      alt="ATTUNER.ai Logo"
+                      width={32}
+                      height={32}
+                      className="rounded-lg w-[280px] h-[280px] object-cover absolute top-[50%] left-[50%] !translate-x-[-50%] !translate-y-[-50%]" 
+                    /> */}
+                  <Image
+                    src="/signal.svg"
+                    alt="ATTUNER.ai Logo"
+                    width={32}
+                    height={32}
+                    className="rounded-lg w-full max-w-[500px] h-[400px] object-contain absolute top-[50%] left-[50%] !translate-x-[-50%] !translate-y-[-50%]"
                   />
-                  <Button
-                    onClick={async () => {
-                      setSending(true);
-                      setEmailStatus('idle');
-                      setEmailMsg('');
-                      try {
-                        // Get chart image as data URL
-                        let chartImg = '';
-                        if (chartExportRef.current) {
-                          chartImg = chartExportRef.current.toDataURL('image/png');
-                        }
-                        // Prepare email params
-                        const params = {
-                          to_email: email,
-                          dominant: insightData.dominant,
-                          weakest: insightData.weakest || '',
-                          insight: insightData.insight,
-                          chart_image: chartImg,
-                          theme: insightData.theme,
-                          overall_average: insightData.overall_average
-                        };
-                        // TODO: Replace with your EmailJS service/template/user IDs
-                        const serviceId = 'YOUR_SERVICE_ID';
-                        const templateId = 'YOUR_TEMPLATE_ID';
-                        const userId = 'YOUR_USER_ID';
-                        await emailjs.send(serviceId, templateId, params, userId);
-                        setEmailStatus('success');
-                        setEmailMsg('Summary sent! Check your inbox.');
-                      } catch {
-                        setEmailStatus('error');
-                        setEmailMsg('Failed to send email. Please try again.');
-                      } finally {
-                        setSending(false);
-                      }
-                    }}
-                    disabled={sending || !email}
-                  >
-                    {sending ? 'Sending...' : 'Send'}
-                  </Button>
+                  {/* Outer rings */}
+                  {/* <div className="absolute inset-0 border-2 border-white/10 rounded-full"></div>
+                  <div className="absolute inset-6 sm:inset-8 border border-white/10 rounded-full"></div>
+                  <div className="absolute inset-12 sm:inset-16 border border-white/10 rounded-full"></div>
+                  <div className="absolute inset-18 sm:inset-24 border border-white/10 rounded-full"></div> */}
+
+                  {/* Cross lines */}
+                  {/* <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-full h-px bg-white/10"></div>
+                  </div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="h-full w-px bg-white/10"></div>
+                  </div> */}
+
+                  {/* Score indicators */}
+                  {/* {Object.entries(scores).map(([category, score], index) => {
+                    const angle = (index * 90) - 90; // Start from top, go clockwise
+                    const maxRadius = window.innerWidth < 640 ? 110 : 140; // Smaller radius on mobile
+                    const radius = (score / 5) * maxRadius;
+                    const x = Math.cos(angle * Math.PI / 180) * radius;
+                    const y = Math.sin(angle * Math.PI / 180) * radius;
+                    
+                    return (
+                      <div
+                        key={category}
+                        className="absolute w-3 h-3 sm:w-4 sm:h-4 rounded-full transform -translate-x-1.5 -translate-y-1.5 sm:-translate-x-2 sm:-translate-y-2"
+                        style={{
+                          left: `calc(50% + ${x}px)`,
+                          top: `calc(50% + ${y}px)`,
+                          background: `linear-gradient(to right, ${categoryColors[category as keyof typeof categoryColors].split(' ')[1]}, ${categoryColors[category as keyof typeof categoryColors].split(' ')[3]})`
+                        }}
+                      />
+                    );
+                  })} */}
+
+                  {/* Category labels */}
+                  {/* <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs sm:text-sm font-medium">
+                    Holistic
+                  </div>
+                  <div className="absolute top-1/2 -right-12 sm:-right-16 transform -translate-y-1/2 text-xs sm:text-sm font-medium">
+                    Integration
+                  </div>
+                  <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs sm:text-sm font-medium">
+                    Consciousness
+                  </div>
+                  <div className="absolute top-1/2 -left-12 sm:-left-16 transform -translate-y-1/2 text-xs sm:text-sm font-medium">
+                    Resonance
+                  </div> */}
                 </div>
-                {emailStatus === 'success' && (
-                  <div className="mt-2 text-green-500">{emailMsg}</div>
-                )}
-                {emailStatus === 'error' && (
-                  <div className="mt-2 text-red-500">{emailMsg}</div>
-                )}
+              </div>
+
+              {/* Scores List */}
+              <div className="space-y-4 sm:space-y-6 order-1 lg:order-2">
+                {Object.entries(scores).map(([category, score]) => (
+                  <div key={category} className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-base sm:text-lg font-semibold capitalize">{category}</h3>
+                      <span className="text-xl sm:text-2xl font-bold">{score.toFixed(1)}</span>
+                    </div>
+                    <div className="w-full bg-white/10 rounded-full h-2 sm:h-3">
+                      <div
+                        className={`h-full rounded-full bg-gradient-to-r ${categoryColors[category as keyof typeof categoryColors]} transition-all duration-1000`}
+                        style={{ width: `${(score / 5) * 100}%` }}
+                      />
+                    </div>
+                    <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                      {categoryDescriptions[category as keyof typeof categoryDescriptions]}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* (Optional) Add more dynamic insights or CTAs here if desired */}
+          {/* Detailed Insights */}
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12">
+            <div className="bg-black/20 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/10">
+              <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Your Strengths</h3>
+              <div className="space-y-3">
+                {Object.entries(scores)
+                  .sort(([, a], [, b]) => b - a)
+                  .slice(0, 2)
+                  .map(([category, score]) => (
+                    <div key={category} className="flex items-center space-x-3">
+                      <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${categoryColors[category as keyof typeof categoryColors]}`} />
+                      <span className="capitalize font-medium text-sm sm:text-base">{category}</span>
+                      <span className="text-gray-400 text-xs sm:text-sm">({score.toFixed(1)}/5)</span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            <div className="bg-black/20 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/10">
+              <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Growth Opportunities</h3>
+              <div className="space-y-3">
+                {Object.entries(scores)
+                  .sort(([, a], [, b]) => a - b)
+                  .slice(0, 2)
+                  .map(([category, score]) => (
+                    <div key={category} className="flex items-center space-x-3">
+                      <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${categoryColors[category as keyof typeof categoryColors]}`} />
+                      <span className="capitalize font-medium text-sm sm:text-base">{category}</span>
+                      <span className="text-gray-400 text-xs sm:text-sm">({score.toFixed(1)}/5)</span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
           <div className="w-full flex justify-center">
             <Button
               onClick={openEmailClient}
               disabled={false}
               className="inline-flex items-center "
             >
-              <span className='max-w-[350px] !text-[20px] sm:!text-[30px] relative' style={{ lineHeight: 1.1 }}>
-                Get Your Free Wholeness Prompting Playbook
-              </span>
+              {false ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-black mr-2"></div>
+                  Analyzing Your Responses...
+                </>
+              ) : (
+                <>
+
+                  <span className='max-w-[350px] !text-[20px] sm:!text-[30px] relative' style={{ lineHeight: 1.1 }}>
+                    {/* <span className='text-[30px] absolute left-[-30px] top-[50%] translate-y-[-50%]'>🔮</span> */}
+                    Get Your Free Wholeness Prompting Playbook
+                  </span>
+                  {/* <svg className="ml-2 w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                          </svg> */}
+                </>
+              )}
             </Button>
           </div>
 
@@ -366,4 +360,4 @@ export default function ResultsPage() {
       </div>
     </ProtectedRoute>
   );
-}
+} 
