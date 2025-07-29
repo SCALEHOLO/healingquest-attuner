@@ -4,6 +4,182 @@ import Image from 'next/image';
 
 const WhatIsHolo = () => {
   return (
+    <>
+      <style jsx>{`
+        .dynamic-margin-right-column {
+        }
+
+        /*
+        @media (max-width: 768px) {
+          .dynamic-margin-left-column {
+            margin-bottom: -40px;
+            margin-left: -15px;
+          }
+        }
+
+        @media (max-width: 739px) {
+          .dynamic-margin-left-column {
+            margin-bottom: -40px;
+            margin-left: -25px;
+          }
+        }
+
+        @media (max-width: 733px) {
+          .dynamic-margin-left-column {
+            margin-bottom: -40px;
+            margin-left: -50px;
+          }
+        }
+
+        @media (max-width: 638px) {
+          .dynamic-margin-left-column {
+            margin-bottom: -40px;
+            margin-left: -15px;
+          }
+        }
+
+        @media (max-width: 598px) {
+          .dynamic-margin-left-column {
+            margin-bottom: -40px;
+            margin-left: -16px;
+          }
+        }
+          */
+
+
+        @media (min-width: 768px) {
+          .dynamic-margin-left-column {
+            margin-bottom: 7px !important;
+            margin-left: -130px !important;
+          }
+        }
+
+        @media (min-width: 802px) {
+          .dynamic-margin-left-column {
+            margin-bottom: 10px !important;
+            margin-right: -10px !important;
+          }
+        }
+
+        @media (min-width: 1054px) {
+          .dynamic-margin-left-column {
+            margin-bottom: 10px !important;
+            margin-right: -5px !important;
+          }
+        }
+
+        /*
+        @media (max-width: 768px) {
+          .dynamic-margin-right-column {
+            margin-bottom: -50px !important;
+            margin-left: -70px !important;
+          }
+        }
+
+        */
+
+        @media (min-width: 768px) {
+          .dynamic-margin-right-column {
+            margin-bottom: -7px !important;
+            margin-left: -60px !important;
+          }
+        }
+
+
+        @media (max-width: 768px) {
+          .dynamic-margin-left-column {
+            margin-bottom: 10px;
+            margin-top: -30px;
+
+          }
+
+          .dynamic-margin-left-column h2 {
+            font-size: clamp(50px, calc(4.9vw + 34.3px), 72px);
+          }
+        }
+
+
+        @media (max-width: 768px) {
+          :global(.dynamic-margin-right-column) {
+          /*
+            width: clamp(290px, calc(0.46875vw + 140px), 500px) !important;
+            margin-top: clamp(-40px, calc(-0.0558vw - 14.82px), -15px) !important;
+            margin-left: clamp(-7px, calc(0.154vw - 7.49px), 62px) !important;
+            width:500px !important;
+            width: calc(0.46875vw + 140px) !important;
+            background: orange;
+            */
+            width:500px !important;
+            margin-left: 62px !important;
+            margin-top: -15px !important;
+            flex-shrink: 0 !important;
+          }
+        }
+
+        @media (max-width: 500px) {
+          :global(.dynamic-margin-right-column) {
+          /*
+            width: clamp(290px, calc(0.46875vw + 140px), 500px) !important;
+            margin-top: clamp(-40px, calc(-0.0558vw - 14.82px), -15px) !important;
+            margin-left: clamp(-7px, calc(0.154vw - 7.49px), 62px) !important;
+            width:500px !important;
+            width: calc(0.46875vw + 140px) !important;
+            background: orange;
+            */
+            width:390px !important;
+            margin-left: 40px !important;
+            margin-top: -20px !important;
+            flex-shrink: 0 !important;
+          }
+        }
+
+        @media (max-width: 400px) {
+          :global(.dynamic-margin-right-column) {
+          /*
+            width: clamp(290px, calc(0.46875vw + 140px), 500px) !important;
+            margin-top: clamp(-40px, calc(-0.0558vw - 14.82px), -15px) !important;
+            margin-left: clamp(-7px, calc(0.154vw - 7.49px), 62px) !important;
+            width:500px !important;
+            width: calc(0.46875vw + 140px) !important;
+            background: orange;
+            */
+            width:290px !important;
+            margin-left: 40px !important;
+            margin-top: -20px !important;
+            flex-shrink: 0 !important;
+          }
+        }
+
+        @media (max-width: 768px) {
+          :global(.center-image) {
+            margin-top: -8rem;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          :global(.center-image) {
+            margin-top: 0rem;
+            margin-bottom:0rem !important;
+          }
+
+          :global(.layout-wrapper) {
+            flex-direction: column !important;
+            align-items: center !important;
+          }
+
+
+
+          :global(.left-item),
+          :global(.right-item) {
+            text-align: center !important;
+          }
+
+        }
+
+
+
+
+    `}</style>
     <section className="px-4 sm:px-6 lg:px-8 bg-[#2a3485] pt-[6rem] lg:pt-[4rem] ">
       <div className="max-w-7xl mx-auto">
 
@@ -25,120 +201,55 @@ const WhatIsHolo = () => {
 
         <div className='bg-[#2c2b72] px-[20px] py-[57px]  md:px-[50px] md:py-[20px] md:pt-[6rem] lg:pt-[4rem]  rounded-[25px]'>
           {/* Title */}
-          <div className="text-center mb-8 sm:mb-12 lg:mb-5 lg:mt-5">
-            <div className="flex items-center justify-center w-full max-w-screen-xl mx-auto whitespace-nowrap">
+          <div className="text-center mb-0 sm:mb-0 lg:mb-5 lg:mt-5">
+            <div className="layout-wrapper flex items-center justify-center w-full max-w-screen-xl mx-auto whitespace-nowrap">
+              
               {/* Left item */}
-              <div className="flex-1 text-right min-w-[150px]">
+              <div className="left-item flex-1 text-right min-w-[150px]">
                 <div className="dynamic-margin-left-column">
-                  <h2 className="font-sans text-6xl sm:text-7xl md:text-8xl lg:text-8xl sm:tracking-tight font-bold text-white whitespace-nowrap mr-[-4rem]">
+                  <h2 className="font-sans text-7xl sm:text-7xl md:text-8xl lg:text-8xl sm:tracking-tight font-bold text-white whitespace-nowrap md:mr-[-4rem]">
                     What is
                   </h2>
                 </div>
               </div>
 
-              {/* Center image (no gap, protected from shrinking) */}
-              <div className="flex-shrink-0">
+              {/* Center image */}
+              <div className="center-item flex-shrink-0">
                 <Image
                   src="/healingQuest/whatISholoLogo.png"
                   alt="HOLO ATTUNER"
                   width={300}
                   height={300}
-                  className="inline-block mt-[-8rem] md:mt-[-11rem]"
+                  className="center-image inline-block md:mt-[-11rem]"
                   loading="lazy"
                   sizes="(max-width: 640px) 120px, (max-width: 768px) 240px, 300px"
                 />
               </div>
 
               {/* Right item */}
-              <div className="flex-1 text-left min-w-[150px]">
+              {/*</div><div className="right-item flex-1 text-left min-w-[150px]">*/}
+              <div className="right-item md:flex-1 text-left min-w-[150px]">
                 <div className="dynamic-margin-right-column">
                   <Image
                     src="/healingQuest/ATTUNER.png"
                     alt="ATTUNER"
                     width={900}
                     height={500}
-                    className="inline-block"
+                    className="inline-block inline-block w-full h-auto"
                     loading="lazy"
                     sizes="(max-width: 640px) 160px, (max-width: 768px) 240px, 360px"
                   />
                 </div>
               </div>
-              <style jsx>{`
-                .dynamic-margin-right-column {
-                }
-
-                @media (max-width: 768px) {
-                  .dynamic-margin-left-column {
-                    margin-bottom: -40px;
-                    margin-left: -15px;
-                  }
-                }
-
-                @media (max-width: 739px) {
-                  .dynamic-margin-left-column {
-                    margin-bottom: -40px;
-                    margin-left: -25px;
-                  }
-                }
-
-                @media (max-width: 733px) {
-                  .dynamic-margin-left-column {
-                    margin-bottom: -40px;
-                    margin-left: -50px;
-                  }
-                }
-
-                @media (max-width: 638px) {
-                  .dynamic-margin-left-column {
-                    margin-bottom: -40px;
-                    margin-left: -15px;
-                  }
-                }
-
-                @media (max-width: 598px) {
-                  .dynamic-margin-left-column {
-                    margin-bottom: -40px;
-                    margin-left: -16px;
-                  }
-                }
-
-
-                @media (min-width: 768px) {
-                  .dynamic-margin-left-column {
-                    margin-bottom: 7px !important;
-                    margin-left: -130px !important;
-                  }
-                }
-
-                @media (min-width: 802px) {
-                  .dynamic-margin-left-column {
-                    margin-bottom: 10px !important;
-                    margin-right: -10px !important;
-                  }
-                }
-
-                @media (min-width: 1054px) {
-                  .dynamic-margin-left-column {
-                    margin-bottom: 10px !important;
-                    margin-right: -5px !important;
-                  }
-                }
-
-                @media (max-width: 768px) {
-                  .dynamic-margin-right-column {
-                    margin-bottom: -50px !important;
-                    margin-left: -70px !important;
-                  }
-                }
-                @media (min-width: 768px) {
-                  .dynamic-margin-right-column {
-                    margin-bottom: -7px !important;
-                    margin-left: -60px !important;
-                  }
-                }
-              `}</style>
             </div>
           </div>
+
+
+
+
+
+
+
 
 
           {/* Main Content - Side by Side */}
@@ -212,6 +323,7 @@ const WhatIsHolo = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 
